@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="noindex, follow">
+<meta name="description" content="Raw record for How this VPS runs.">
+<title>Evidence — How this VPS runs</title>
+<style>:root{color-scheme:dark light;--ink:#0B0E13;--raise:#12161E;--raise2:#1A1F2B;--sunk:#090C11;--rule:#262D3D;--rule2:#333C50;--t1:#F2EDE8;--t2:#9B9589;--t3:#6B665C;--gold:#C9A227;--gold2:#E0B830;--ok:#3D9B6E;--warn:#C4A235;--bad:#C4503A;--display:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;--sans:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;--mono:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace}@media (prefers-color-scheme:light){:root{--ink:#ECEEEB;--raise:#F8F9F7;--raise2:#FFFFFF;--sunk:#E2E5E1;--rule:#CDD2CC;--rule2:#A7AFA6;--t1:#10151B;--t2:#4C555E;--t3:#6F7880;--gold:#8A6B10;--gold2:#6E5409;--ok:#2E7A55;--warn:#7A5F0E;--bad:#A83A24}}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--t1);font:16.5px/1.65 var(--sans);
+-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:0 26px}
+.wide{max-width:1040px}
+a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:3px}
+a:hover{text-decoration-color:currentColor}
+a:focus-visible{outline:2px solid var(--gold2);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.02em}
+p{margin:0 0 15px}
+code{font:.9em var(--mono)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:14px;top:14px;background:var(--raise);padding:9px 14px;z-index:9}
+.mast{border-bottom:1px solid var(--rule)}
+.mast .wrap{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:baseline;
+justify-content:space-between;padding-top:18px;padding-bottom:16px}
+.mark{font:600 14px/1.4 var(--sans);letter-spacing:.02em;text-decoration:none}
+.mast nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;
+font:11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.mast nav a{text-decoration-color:transparent}
+.mast nav a:hover,.mast nav a[aria-current=page]{text-decoration-color:currentColor}
+main{padding-top:clamp(38px,7vw,80px)}
+h1{font-size:clamp(40px,6vw,72px);line-height:1.02;margin:0}
+h2{font-size:26px;margin:0 0 12px}h3{font-size:18px;margin:26px 0 8px}
+.thesis{font:clamp(19px,2.3vw,26px)/1.45 var(--display);letter-spacing:-.015em;
+margin:28px 0 0;max-width:34ch}
+.roles{display:flex;flex-wrap:wrap;gap:12px 0;margin:32px 0 0;padding:0;list-style:none;
+font:11.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--t2)}
+.roles li{padding:0 16px;border-left:1px solid var(--rule2)}
+.roles li:first-child{padding-left:0;border-left:0}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin:34px 0 0}
+.btn{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;
+text-transform:uppercase;padding:14px 22px;border:1px solid var(--rule2);
+text-decoration:none;transition:border-color .15s ease,background-color .15s ease}
+.btn:hover{border-color:var(--t2);background:var(--raise)}
+.btn-p{border-color:var(--t1)}
+.avail{margin:22px 0 0;font:12px/1.6 var(--mono);letter-spacing:.05em;color:var(--t3)}
+.sec{margin:clamp(52px,8vw,86px) 0 0}
+.eyebrow{display:flex;align-items:center;gap:12px;font:11px/1 var(--mono);
+letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+.eyebrow::before{content:"";width:26px;height:1px;background:currentColor;flex:0 0 auto}
+.sec-note{margin:0 0 22px;color:var(--t2);font-size:15px;max-width:66ch}
+.grid{display:grid;gap:1px}
+.grid>*{box-shadow:0 0 0 1px var(--rule)}
+.pkgs{grid-template-columns:1fr}
+.cell{background:var(--raise);padding:20px 20px 18px}
+.cmd{display:block;font:13.5px/1.5 var(--mono);color:var(--t1);overflow-wrap:anywhere}
+.cmd::before{content:"$ ";color:var(--t3)}
+.pkg-meta{margin:15px 0 0;font:10.5px/1 var(--mono);letter-spacing:.13em;
+text-transform:uppercase;color:var(--t3);display:flex;flex-wrap:wrap;gap:9px;
+align-items:baseline}
+.ver{font-size:16px;letter-spacing:0;color:var(--gold);font-variant-numeric:tabular-nums}
+.pkg-cli{margin:11px 0 0;font:12px/1.5 var(--mono);color:var(--t2)}
+.cards{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--raise);padding:26px 24px 22px;text-decoration:none;display:block;
+transition:background-color .15s ease}
+.card:hover{background:var(--raise2)}
+.card:hover .card-t{text-decoration-color:currentColor}
+.card-dom{display:block;font:10.5px/1 var(--mono);letter-spacing:.18em;
+text-transform:uppercase;color:var(--t3);margin:0 0 15px}
+.card-t{display:block;font:clamp(22px,2.4vw,28px)/1.2 var(--display);letter-spacing:-.02em;
+text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:5px}
+.card-h{display:block;margin:12px 0 0;color:var(--t2);font-size:15px;line-height:1.6;
+max-width:52ch}
+.card-foot{display:flex;align-items:flex-end;gap:16px;margin:26px 0 0;padding:16px 0 0;
+border-top:1px solid var(--rule)}
+.big{font:400 clamp(34px,4.4vw,52px)/.88 var(--display);color:var(--gold);
+font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.big-lab{font:10.5px/1.35 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+color:var(--t3);max-width:15ch;padding-bottom:3px}
+.glyph{margin-left:auto;color:var(--rule2);flex:0 0 auto}
+.glyph svg{display:block;height:46px;width:auto;max-width:150px}
+.card-f{grid-column:1/-1}
+.card-f .card-h{max-width:64ch}
+.soon{color:var(--t2);display:flex;flex-direction:column;justify-content:center}
+.soon .card-dom{color:var(--t3)}
+.soon p{font-size:15px;line-height:1.6;margin:0;max-width:44ch}
+.how{grid-template-columns:repeat(3,1fr)}
+.how .cell{padding:24px 22px 22px}
+.how-l{font:10.5px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 15px}
+.how-t{font:17px/1.55 var(--display);margin:0;color:var(--t1)}
+.ledger{grid-template-columns:repeat(4,1fr);margin:26px 0 0}
+.ledger .cell{padding:18px 18px 16px}
+.led-v{font:22px/1.1 var(--mono);letter-spacing:-.02em;color:var(--t1);margin:0;
+font-variant-numeric:tabular-nums}
+.led-l{font:10px/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+color:var(--t3);margin:10px 0 0}
+@media (max-width:620px){.ledger{grid-template-columns:repeat(2,1fr)}}
+.plain{list-style:none;margin:0;padding:0}
+.plain li{padding:13px 0;border-bottom:1px solid var(--rule)}
+.plain li:last-child{border-bottom:0}
+.plain li>p:last-child{margin-bottom:0}
+.kicker{font:11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 20px}
+.lede{font:clamp(20px,2.7vw,29px)/1.35 var(--display);letter-spacing:-.02em;
+margin:24px 0 0;max-width:30ch}
+.prose p{max-width:68ch;line-height:1.75;margin:0 0 20px}
+.prose>:last-child{margin-bottom:0}
+.artifact{background:var(--raise);border:1px solid var(--rule);
+border-top:2px solid var(--gold);padding:22px 22px 20px;margin:22px 0}
+.artifact>.eyebrow{margin-bottom:18px}
+.artifact>:last-child{margin-bottom:0}
+.dec{list-style:none;counter-reset:d;margin:0;padding:0;display:grid;gap:1px}
+.dec li{box-shadow:0 0 0 1px var(--rule)}
+.dec li{counter-increment:d;background:var(--raise);padding:20px 22px 18px}
+.dec li::before{content:counter(d,decimal-leading-zero);display:block;
+font:11px/1 var(--mono);letter-spacing:.16em;color:var(--t3);margin:0 0 13px}
+.dec p{max-width:64ch;line-height:1.7}
+.dec p:last-child{margin-bottom:0}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font:10.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+color:var(--t3);padding:0 14px 10px 0;border-bottom:1px solid var(--rule2);white-space:nowrap}
+td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule);vertical-align:top;
+font:13px/1.6 var(--mono)}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;font:10px/1.5 var(--mono);letter-spacing:.1em;
+text-transform:uppercase;padding:2px 9px;border:1px solid currentColor;border-radius:999px;
+white-space:nowrap}
+.p-ok{color:var(--ok)}.p-no{color:var(--bad)}.p-na{color:var(--warn)}
+.note{color:var(--t2);font-size:14.5px}
+.dia{color:var(--t2);margin:0;overflow-x:auto}
+.dia svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure{margin:24px 0}
+figcaption{font:11px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+color:var(--t3);margin:0 0 11px}
+pre{background:var(--sunk);border:1px solid var(--rule);border-left:2px solid var(--rule2);
+padding:17px 19px;margin:0;overflow-x:auto;font:12.5px/1.7 var(--mono);
+white-space:pre-wrap;overflow-wrap:break-word}
+.draft{border-left:2px solid var(--warn);padding:3px 0 3px 17px;color:var(--t2);
+font-size:14.5px;margin:26px 0 0;max-width:64ch}
+footer{margin-top:clamp(70px,10vw,116px);border-top:1px solid var(--rule);padding:26px 0 60px}
+.auth{margin:0;font-size:13.5px;line-height:1.7;color:var(--t2);max-width:72ch}
+.fmeta{margin:16px 0 0;font:10.5px/1.9 var(--mono);letter-spacing:.13em;
+text-transform:uppercase;color:var(--t3)}
+@media (min-width:600px){.pkgs{grid-template-columns:repeat(2,1fr)}
+.pkgs>:last-child{grid-column:span 2}}
+@media (min-width:900px){.pkgs{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:820px){.cards,.how{grid-template-columns:1fr}.card-f{grid-column:auto}}
+@media (max-width:640px){.roles{flex-direction:column;align-items:flex-start;gap:9px}
+.roles li{border-left:0;padding:0}}
+@media (max-width:560px){main{padding-top:34px}.mast nav ul{gap:16px}
+.thesis{max-width:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+:root[data-scheme=dark]{--ink:#0B0E13;--raise:#12161E;--raise2:#1A1F2B;--sunk:#090C11;--rule:#262D3D;--rule2:#333C50;--t1:#F2EDE8;--t2:#9B9589;--t3:#6B665C;--gold:#C9A227;--gold2:#E0B830;--ok:#3D9B6E;--warn:#C4A235;--bad:#C4503A}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast"><div class="wrap">
+<a class="mark" href="/">King Hippopotamus</a>
+<nav aria-label="Primary"><ul><li><a href="/work/" aria-current="page">Work</a></li><li><a href="/about/">About</a></li><li><a href="/hire/">Hire</a></li><li><a href="https://github.com/TheKingHippopotamus">GitHub</a></li></ul></nav>
+</div></header>
+<main id="main"><div class="wrap">
+<p class="kicker">Evidence record</p><h1>How this VPS runs</h1><p class="lede">Every claim here was checked by running the command shown. The ones that failed are still on the page, labelled.</p><div class="artifact"><p class="eyebrow">Research artifact · evidence ledger</p>
+<div class="tw"><table><thead><tr><th>Claim</th><th>How it was checked</th><th>Result</th></tr></thead><tbody><tr><td>The whole estate runs on one virtual server with roughly 11 GB of memory and a 193 GB root filesystem, 87% used.</td><td>free -g ; df -h /</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The data platform holds 105.4 GB (98.2 GiB) of database files across 54 files; the whole platform tree is 114.4 GB (106.5 GiB).</td><td>find $FIN/Data -name &#x27;*.db&#x27; -type f -printf &#x27;%s\n&#x27; | awk &#x27;{s+=$1}END{print s}&#x27; ; du -sb $FIN</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>397,679,393 rows sit under governance across 28 named surfaces.</td><td>row count per surface, read-only, summed over the 28 surfaces in the figures ledger</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The scheduled surface is 54 jobs: 43 timer units loaded and scheduled, plus 11 active cron lines.</td><td>systemctl --user list-timers --all --no-legend | wc -l ; crontab -l | grep -vcE &#x27;^\s*(#|$)&#x27;</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The security decision log carries 4 dated rulings over 510 lines, spanning 2026-03-30 to 2026-08-23.</td><td>grep -cE &#x27;^## 20&#x27; &lt;office&gt;/ciso/DECISION-LOG.md ; wc -l ; first and last date token</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The host sensor is a single file of 1,611 lines using the standard library only, and samples 10 named layers.</td><td>wc -l &lt;sensor&gt; ; layer table in the sensor source</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The agent organisation is 8 charter files covering 7 distinct seats, with 1 role retired to an archive.</td><td>ls -1 &lt;roster&gt;/*.md | wc -l ; grep -h &#x27;^name:&#x27; &lt;roster&gt;/*.md</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The transcript corpus is 12,171 deduplicated calls across 3,652 tickers, 2021-03-10 to 2026-08-21.</td><td>SELECT COUNT(*), COUNT(DISTINCT ticker), MIN(call_date), MAX(call_date) FROM calls (mode=ro)</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The four-seat data office is currently operating.</td><td>ls &lt;roster&gt;/*.md returns four current seat charters; the shared state directory those charters declare as mandatory returns No such file or directory</td><td><span class="pill p-no">failed</span></td></tr><tr><td>The three published Python packages install and run from a clean environment at their published versions.</td><td>local CI, latest run per repository: CAD server FAIL, vault PASS, XBRL server FAIL — overall ATTENTION; both failures are fresh-install failures against the published release, and the working trees are green</td><td><span class="pill p-no">failed</span></td></tr><tr><td>Every repository removed from public view during the portfolio curation is accounted for in the curation log.</td><td>62 catalogued (48 owned + 14 forks) ; 9 made private, 21 archived, 9 descriptions rewritten, all HTTP 200 ; 50 public today — three repositories in the census appear in no curation-log row</td><td><span class="pill p-no">failed</span></td></tr><tr><td>Nothing on this site has been audited, reviewed or certified by a third party.</td><td>no external engagement exists to cite; the position is stated rather than demonstrated</td><td><span class="pill p-na">not testable</span></td></tr></tbody></table></div>
+</div><div class="artifact"><p class="eyebrow">Research artifact · raw record</p>
+<pre>HOW THIS VPS RUNS — SYSTEM MAP, RAW RECORD
+Measured 2026-08-23, read-only, on the host being described.
+Placeholder roots are used throughout: $FIN is the data-platform root, &lt;office&gt;
+the security office, &lt;sensor&gt; the host sensor, &lt;roster&gt; the agent charter roster.
+No absolute path, address or hostname appears below.
+
+Every figure on the page is one of the rows here. Where a figure was reconciled
+across chapters, the wording below is the only wording permitted for it.
+
+================================================================================
+1. THE HOST — one virtual server, not a fleet
+--------------------------------------------------------------------------------
+COMMAND
+  free -g
+  df -h /
+
+OUTPUT
+  Mem: total 11 GB · used 2 · free 6 · buff/cache 3 · available 9
+  Swap: 0
+  root filesystem 193 G total · 167 G used · 26 G available · 87% used
+
+RESULT  verified — roughly 11 GB of memory and a 193 GB root filesystem, 87%
+        used. Everything else in this record runs inside that envelope.
+
+================================================================================
+2. THE ESTATE ON DISK — databases vs. tree
+--------------------------------------------------------------------------------
+COMMAND
+  find $FIN/Data -name &#x27;*.db&#x27; -type f -printf &#x27;%s\n&#x27; | awk &#x27;{s+=$1}END{print s}&#x27;
+  du -sb $FIN
+
+OUTPUT
+  105,441,099,776 B across 54 files
+  114,355,413,279 B for the whole tree
+
+RESULT  verified — 105.4 GB (98.2 GiB) of database files across 54 files;
+        114.4 GB (106.5 GiB) for the whole platform tree, which includes raw
+        blobs, code, logs and backups. The two are never interchangeable, and
+        the tree figure is never attributed to the databases.
+
+================================================================================
+3. ROWS UNDER GOVERNANCE
+--------------------------------------------------------------------------------
+COMMAND
+  one read-only row count per governed surface, summed over 28 surfaces
+
+OUTPUT
+  397,679,393 rows across 28 named surfaces
+
+RESULT  verified — the largest summands are dimensioned XBRL fact rows
+        (103,444,701), XBRL company facts (125,307,255), institutional-holdings
+        positions (72,027,463), filer-to-filing links (27,155,455), daily price
+        bars (18,914,666) and the filing spine (18,697,338). The sum mixes
+        grains — filings, facts, positions, speaker turns — so it is a count of
+        governed rows, not of records or data points.
+
+================================================================================
+4. THE SCHEDULED SURFACE
+--------------------------------------------------------------------------------
+COMMAND
+  systemctl --user list-timers --all --no-legend | wc -l
+  crontab -l | grep -vcE &#x27;^\s*(#|$)&#x27;
+
+OUTPUT
+  43 timer units loaded and scheduled
+  11 active cron lines
+
+RESULT  verified — 54 scheduled jobs. This counts jobs, not runs per day. Two
+        adjacent numbers are deliberately not published here: 50 timer unit
+        files were authored by hand, and the user manager can see 52 units
+        because the operating system supplies two of its own.
+
+================================================================================
+5. THE DECISION LOG
+--------------------------------------------------------------------------------
+COMMAND
+  grep -cE &#x27;^## 20&#x27; &lt;office&gt;/ciso/DECISION-LOG.md
+  wc -l &lt;office&gt;/ciso/DECISION-LOG.md
+  first and last date token in the same file
+
+OUTPUT
+  4 dated sections · 510 lines · 2026-03-30 -&gt; 2026-08-23
+
+RESULT  verified — 4 rulings. Two of the four carry an explicit
+        APPROVE-WITH-CONDITIONS verdict; the other two are an investigation plan
+        and an execution record. The file also holds 12 dated sub-item bullets;
+        those are entries, not rulings, and are not published as such.
+
+================================================================================
+6. THE HOST SENSOR
+--------------------------------------------------------------------------------
+COMMAND
+  wc -l &lt;sensor&gt;
+  layer table in the sensor source
+
+OUTPUT
+  1,611 lines · standard library only · 10 layers
+
+RESULT  verified — one file, no third-party dependency, ten layers: kernel,
+        network, auth, process, containers, storage, service, application,
+        security, integrity. On an ordinary day it runs 288 three-layer passes,
+        96 ten-layer passes, 24 janitor runs, 24 outbound-only linter runs and
+        one daily digest. Those four counts measure different things and are
+        never summed into one number.
+
+================================================================================
+7. THE AGENT ORGANISATION
+--------------------------------------------------------------------------------
+COMMAND
+  ls -1 &lt;roster&gt;/*.md | wc -l
+  grep -h &#x27;^name:&#x27; &lt;roster&gt;/*.md
+  ls -1 &lt;roster&gt;/_archive/
+
+OUTPUT
+  8 charter files · 7 distinct seats · 1 role retired (2026-07-02)
+
+RESULT  verified — one role carries two profiles, a full role definition and a
+        lighter orchestrator definition, which is why 8 files cover 7 seats.
+
+================================================================================
+8. THE TRANSCRIPT CORPUS
+--------------------------------------------------------------------------------
+COMMAND
+  SELECT COUNT(*), COUNT(DISTINCT ticker), MIN(call_date), MAX(call_date)
+    FROM calls;                                  -- opened mode=ro
+
+OUTPUT
+  12,171 calls · 3,652 tickers · 2021-03-10 -&gt; 2026-08-21
+
+RESULT  verified — 12,171 is the corpus after deduplication. The two upstream
+        stores hold 12,712 raw captures between them; the 541-row difference
+        (4.3%) is removed by two passes, one that drops an archive capture when
+        a live capture covers the same quarter, and one that keeps the fullest
+        capture when a provider re-posts the same call under a new URL. The
+        rows are deduplicated, not lost.
+
+================================================================================
+9. THE DATA OFFICE — CLAIM WITHDRAWN
+--------------------------------------------------------------------------------
+CLAIM TESTED
+  &quot;The four-seat data office is currently operating.&quot;
+
+COMMAND
+  ls &lt;roster&gt;/*.md
+  stat the shared state directory those four charters declare as mandatory
+
+OUTPUT
+  four current, detailed seat charters present
+  shared state directory: No such file or directory
+
+RESULT  failed — the charters are current and the separation of powers in them
+        is real as a design: the architect is the single write thread, the
+        quality officer holds a unilateral block on publish and may not
+        implement its own fixes. But the state store the seats close their tasks
+        against does not exist on this host, so the office is designed
+        governance, not a running system. It is described in the present tense
+        only as a design.
+
+================================================================================
+10. THE PUBLISHED PACKAGES — CLAIM WITHDRAWN
+--------------------------------------------------------------------------------
+CLAIM TESTED
+  &quot;The three published Python packages install and run from a clean environment
+   at their published versions.&quot;
+
+COMMAND
+  local CI, latest run per repository, plus the published version of each
+  project read back from the index and compared with the working tree
+
+OUTPUT
+  CAD server   FAIL   index 0.2.1 · local fix branch 0.2.2 (unpublished)
+  vault        PASS   index 3.1.1 · local fix branch 3.2.1 (unpublished)
+  XBRL server  FAIL   index 2.1.0 · local fix branch 2.1.1 (unpublished)
+  overall ATTENTION · tests in the working trees: 229 · 144 · 16
+  end-to-end audit 12 pass / 4 fail
+
+RESULT  failed — both failures are fresh-install failures against the published
+        release, not against the code. The fixes exist, are tested and are not
+        shipped, which is exactly the gap the row is here to record. The worst
+        of the underlying defects was an unbounded dependency range that
+        resolved to a major release which had removed the module the server
+        imports at startup: the install exits 0 and the product cannot start.
+
+================================================================================
+11. PORTFOLIO CURATION — ARITHMETIC THAT DOES NOT CLOSE
+--------------------------------------------------------------------------------
+CLAIM TESTED
+  &quot;Every repository removed from public view is accounted for in the curation
+   log.&quot;
+
+COMMAND
+  the day-0 census file: owned originals + forks
+  grep -c &#x27;private=true&#x27; / &#x27;archived=true&#x27; / &#x27;description set&#x27; on the curation log
+  live count from the public listing endpoint
+
+OUTPUT
+  62 catalogued (48 owned originals + 14 forks, all public)
+  9 made private · 21 archived · 9 descriptions rewritten — all HTTP 200
+  50 public today, of which 21 archived and 14 forks · 17 stars in total
+
+RESULT  failed — 62 catalogued minus 9 made private is 53, and 50 are listed.
+        Three repositories in the census are no longer publicly listed and
+        appear in no curation-log row, so their disposition is not evidenced.
+        Archiving does not remove a repository from public view, so the 21
+        archived do not close the gap either.
+
+================================================================================
+12. EXTERNAL VALIDATION
+--------------------------------------------------------------------------------
+CLAIM TESTED
+  &quot;Nothing here has been audited, reviewed or certified by a third party.&quot;
+
+COMMAND
+  none available — there is no external engagement to cite
+
+RESULT  not testable — stated as a position rather than demonstrated. Every
+        other row on this page is self-measured on the host it describes. The
+        substitute for an external auditor is that each figure carries the
+        command that produced it, that three of the twelve rows above came back
+        failed and were kept, and that the publish pipeline&#x27;s own verification
+        stage re-derives the numbers from a fresh context rather than reading
+        how they were derived — a stage which returned FAIL, with six numeric
+        mismatches, on the first case study it was pointed at.
+
+================================================================================
+CHRONOLOGY — order of construction, month level, 2026
+--------------------------------------------------------------------------------
+  March      security office established; audit trail and decision log opened
+  April      session changelog opened, appended at the end of every session
+  May        daily fundamentals snapshots begin
+  June       dead-man&#x27;s switch armed; gate ledger opened; second department
+             decision log opened; transcript archive first synced
+  July       platform blueprint drafted; secrets consolidated; identity-hygiene
+             law issued; attack-surface map written; live transcript feed begins
+  August     audits: the withdrawn report campaign, the reliability doctrine,
+             the estate census and integrity run, the packaging audit
+</pre>
+</div><p class="note"><a href="/work/operating-system/">← Back to the case study</a></p>
+</div></main>
+<footer><div class="wrap"><p class="auth">I architect and operate the systems described here; implementation is produced by the multi-agent organisation I run, and every number on this site was re-derived from source before publication.</p>
+<p class="fmeta">@TheKingHippopotamus · <a href="mailto:hi@king-hippopotamus.com">hi@king-hippopotamus.com</a> · <a href="https://github.com/TheKingHippopotamus">GitHub</a></p>
+</div></footer>
+</body>
+</html>

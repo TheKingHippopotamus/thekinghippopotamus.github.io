@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="index, follow">
+<meta name="description" content="Seven stations from vision to falsification. The seventh turned on my own work: eight reports destroyed, none republished, because 99% reliable is not kept.">
+<title>Research &amp; discovery method — King Hippopotamus</title>
+<link rel="canonical" href="https://thekinghippopotamus.github.io/work/research-method/">
+<style>:root{color-scheme:dark light;--ink:#0B0E13;--raise:#12161E;--raise2:#1A1F2B;--sunk:#090C11;--rule:#262D3D;--rule2:#333C50;--t1:#F2EDE8;--t2:#9B9589;--t3:#6B665C;--gold:#C9A227;--gold2:#E0B830;--ok:#3D9B6E;--warn:#C4A235;--bad:#C4503A;--display:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;--sans:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;--mono:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace}@media (prefers-color-scheme:light){:root{--ink:#ECEEEB;--raise:#F8F9F7;--raise2:#FFFFFF;--sunk:#E2E5E1;--rule:#CDD2CC;--rule2:#A7AFA6;--t1:#10151B;--t2:#4C555E;--t3:#6F7880;--gold:#8A6B10;--gold2:#6E5409;--ok:#2E7A55;--warn:#7A5F0E;--bad:#A83A24}}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--t1);font:16.5px/1.65 var(--sans);
+-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:0 26px}
+.wide{max-width:1040px}
+a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:3px}
+a:hover{text-decoration-color:currentColor}
+a:focus-visible{outline:2px solid var(--gold2);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.02em}
+p{margin:0 0 15px}
+code{font:.9em var(--mono)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:14px;top:14px;background:var(--raise);padding:9px 14px;z-index:9}
+.mast{border-bottom:1px solid var(--rule)}
+.mast .wrap{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:baseline;
+justify-content:space-between;padding-top:18px;padding-bottom:16px}
+.mark{font:600 14px/1.4 var(--sans);letter-spacing:.02em;text-decoration:none}
+.mast nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;
+font:11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.mast nav a{text-decoration-color:transparent}
+.mast nav a:hover,.mast nav a[aria-current=page]{text-decoration-color:currentColor}
+main{padding-top:clamp(38px,7vw,80px)}
+h1{font-size:clamp(40px,6vw,72px);line-height:1.02;margin:0}
+h2{font-size:26px;margin:0 0 12px}h3{font-size:18px;margin:26px 0 8px}
+.thesis{font:clamp(19px,2.3vw,26px)/1.45 var(--display);letter-spacing:-.015em;
+margin:28px 0 0;max-width:34ch}
+.roles{display:flex;flex-wrap:wrap;gap:12px 0;margin:32px 0 0;padding:0;list-style:none;
+font:11.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--t2)}
+.roles li{padding:0 16px;border-left:1px solid var(--rule2)}
+.roles li:first-child{padding-left:0;border-left:0}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin:34px 0 0}
+.btn{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;
+text-transform:uppercase;padding:14px 22px;border:1px solid var(--rule2);
+text-decoration:none;transition:border-color .15s ease,background-color .15s ease}
+.btn:hover{border-color:var(--t2);background:var(--raise)}
+.btn-p{border-color:var(--t1)}
+.avail{margin:22px 0 0;font:12px/1.6 var(--mono);letter-spacing:.05em;color:var(--t3)}
+.sec{margin:clamp(52px,8vw,86px) 0 0}
+.eyebrow{display:flex;align-items:center;gap:12px;font:11px/1 var(--mono);
+letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+.eyebrow::before{content:"";width:26px;height:1px;background:currentColor;flex:0 0 auto}
+.sec-note{margin:0 0 22px;color:var(--t2);font-size:15px;max-width:66ch}
+.grid{display:grid;gap:1px}
+.grid>*{box-shadow:0 0 0 1px var(--rule)}
+.pkgs{grid-template-columns:1fr}
+.cell{background:var(--raise);padding:20px 20px 18px}
+.cmd{display:block;font:13.5px/1.5 var(--mono);color:var(--t1);overflow-wrap:anywhere}
+.cmd::before{content:"$ ";color:var(--t3)}
+.pkg-meta{margin:15px 0 0;font:10.5px/1 var(--mono);letter-spacing:.13em;
+text-transform:uppercase;color:var(--t3);display:flex;flex-wrap:wrap;gap:9px;
+align-items:baseline}
+.ver{font-size:16px;letter-spacing:0;color:var(--gold);font-variant-numeric:tabular-nums}
+.pkg-cli{margin:11px 0 0;font:12px/1.5 var(--mono);color:var(--t2)}
+.cards{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--raise);padding:26px 24px 22px;text-decoration:none;display:block;
+transition:background-color .15s ease}
+.card:hover{background:var(--raise2)}
+.card:hover .card-t{text-decoration-color:currentColor}
+.card-dom{display:block;font:10.5px/1 var(--mono);letter-spacing:.18em;
+text-transform:uppercase;color:var(--t3);margin:0 0 15px}
+.card-t{display:block;font:clamp(22px,2.4vw,28px)/1.2 var(--display);letter-spacing:-.02em;
+text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:5px}
+.card-h{display:block;margin:12px 0 0;color:var(--t2);font-size:15px;line-height:1.6;
+max-width:52ch}
+.card-foot{display:flex;align-items:flex-end;gap:16px;margin:26px 0 0;padding:16px 0 0;
+border-top:1px solid var(--rule)}
+.big{font:400 clamp(34px,4.4vw,52px)/.88 var(--display);color:var(--gold);
+font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.big-lab{font:10.5px/1.35 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+color:var(--t3);max-width:15ch;padding-bottom:3px}
+.glyph{margin-left:auto;color:var(--rule2);flex:0 0 auto}
+.glyph svg{display:block;height:46px;width:auto;max-width:150px}
+.card-f{grid-column:1/-1}
+.card-f .card-h{max-width:64ch}
+.soon{color:var(--t2);display:flex;flex-direction:column;justify-content:center}
+.soon .card-dom{color:var(--t3)}
+.soon p{font-size:15px;line-height:1.6;margin:0;max-width:44ch}
+.how{grid-template-columns:repeat(3,1fr)}
+.how .cell{padding:24px 22px 22px}
+.how-l{font:10.5px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 15px}
+.how-t{font:17px/1.55 var(--display);margin:0;color:var(--t1)}
+.ledger{grid-template-columns:repeat(4,1fr);margin:26px 0 0}
+.ledger .cell{padding:18px 18px 16px}
+.led-v{font:22px/1.1 var(--mono);letter-spacing:-.02em;color:var(--t1);margin:0;
+font-variant-numeric:tabular-nums}
+.led-l{font:10px/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+color:var(--t3);margin:10px 0 0}
+@media (max-width:620px){.ledger{grid-template-columns:repeat(2,1fr)}}
+.plain{list-style:none;margin:0;padding:0}
+.plain li{padding:13px 0;border-bottom:1px solid var(--rule)}
+.plain li:last-child{border-bottom:0}
+.plain li>p:last-child{margin-bottom:0}
+.kicker{font:11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 20px}
+.lede{font:clamp(20px,2.7vw,29px)/1.35 var(--display);letter-spacing:-.02em;
+margin:24px 0 0;max-width:30ch}
+.prose p{max-width:68ch;line-height:1.75;margin:0 0 20px}
+.prose>:last-child{margin-bottom:0}
+.artifact{background:var(--raise);border:1px solid var(--rule);
+border-top:2px solid var(--gold);padding:22px 22px 20px;margin:22px 0}
+.artifact>.eyebrow{margin-bottom:18px}
+.artifact>:last-child{margin-bottom:0}
+.dec{list-style:none;counter-reset:d;margin:0;padding:0;display:grid;gap:1px}
+.dec li{box-shadow:0 0 0 1px var(--rule)}
+.dec li{counter-increment:d;background:var(--raise);padding:20px 22px 18px}
+.dec li::before{content:counter(d,decimal-leading-zero);display:block;
+font:11px/1 var(--mono);letter-spacing:.16em;color:var(--t3);margin:0 0 13px}
+.dec p{max-width:64ch;line-height:1.7}
+.dec p:last-child{margin-bottom:0}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font:10.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+color:var(--t3);padding:0 14px 10px 0;border-bottom:1px solid var(--rule2);white-space:nowrap}
+td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule);vertical-align:top;
+font:13px/1.6 var(--mono)}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;font:10px/1.5 var(--mono);letter-spacing:.1em;
+text-transform:uppercase;padding:2px 9px;border:1px solid currentColor;border-radius:999px;
+white-space:nowrap}
+.p-ok{color:var(--ok)}.p-no{color:var(--bad)}.p-na{color:var(--warn)}
+.note{color:var(--t2);font-size:14.5px}
+.dia{color:var(--t2);margin:0;overflow-x:auto}
+.dia svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure{margin:24px 0}
+figcaption{font:11px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+color:var(--t3);margin:0 0 11px}
+pre{background:var(--sunk);border:1px solid var(--rule);border-left:2px solid var(--rule2);
+padding:17px 19px;margin:0;overflow-x:auto;font:12.5px/1.7 var(--mono);
+white-space:pre-wrap;overflow-wrap:break-word}
+.draft{border-left:2px solid var(--warn);padding:3px 0 3px 17px;color:var(--t2);
+font-size:14.5px;margin:26px 0 0;max-width:64ch}
+footer{margin-top:clamp(70px,10vw,116px);border-top:1px solid var(--rule);padding:26px 0 60px}
+.auth{margin:0;font-size:13.5px;line-height:1.7;color:var(--t2);max-width:72ch}
+.fmeta{margin:16px 0 0;font:10.5px/1.9 var(--mono);letter-spacing:.13em;
+text-transform:uppercase;color:var(--t3)}
+@media (min-width:600px){.pkgs{grid-template-columns:repeat(2,1fr)}
+.pkgs>:last-child{grid-column:span 2}}
+@media (min-width:900px){.pkgs{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:820px){.cards,.how{grid-template-columns:1fr}.card-f{grid-column:auto}}
+@media (max-width:640px){.roles{flex-direction:column;align-items:flex-start;gap:9px}
+.roles li{border-left:0;padding:0}}
+@media (max-width:560px){main{padding-top:34px}.mast nav ul{gap:16px}
+.thesis{max-width:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+:root[data-scheme=dark]{--ink:#0B0E13;--raise:#12161E;--raise2:#1A1F2B;--sunk:#090C11;--rule:#262D3D;--rule2:#333C50;--t1:#F2EDE8;--t2:#9B9589;--t3:#6B665C;--gold:#C9A227;--gold2:#E0B830;--ok:#3D9B6E;--warn:#C4A235;--bad:#C4503A}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast"><div class="wrap">
+<a class="mark" href="/">King Hippopotamus</a>
+<nav aria-label="Primary"><ul><li><a href="/work/" aria-current="page">Work</a></li><li><a href="/about/">About</a></li><li><a href="/hire/">Hire</a></li><li><a href="https://github.com/TheKingHippopotamus">GitHub</a></li></ul></nav>
+</div></header>
+<main id="main"><div class="wrap">
+<p class="kicker">Case study</p>
+<h1>Research &amp; discovery method</h1>
+<p class="lede">Seven stations from vision to falsification. The seventh turned on my own work: eight reports destroyed, none republished, because 99% reliable is not kept.</p>
+<section class="sec"><p class="eyebrow">Context</p><div class="prose"><p>I do not start research by asking a question and hunting for an answer. I write the programme down first, and the shape has come out the same way six times across six unrelated programmes — a filing-forensics system, an earnings-call platform, a deterministic equity workbench, two corpus-discovery studies and a platform blueprint — written months apart, in different domains.</p>
+<p>The reason is a specific failure mode. A research system that cannot tell <strong>“the company never disclosed it”</strong> from <strong>“we never went and got it”</strong> does not produce incomplete work. It produces confident work that is wrong, because every ingestion hole is rendered in the deliverable as a disclosure hole and the sentence reads the same either way.</p>
+<p>So the programme is written as artifacts that can refuse: an objective matrix a deliverable is checked against rather than a prose brief, a source census whose most useful column is what I am <strong>not</strong> taking, an execution manifest that gives every unit a budget and one output path, and gates that exit non-zero. The last station is the one that costs something — treating a finished report as a hypothesis and running the audit against myself.</p></div></section>
+<section class="sec"><p class="eyebrow">What I built</p><div class="prose"><p>The method is seven stations, and the seventh is the one that matters.</p>
+<p>In August 2026 I put a finished campaign — 8 reports (7 plus a baseline), 7 tickers, 66 declared limitations — through a falsification pass that asked one question of every declared gap: genuinely not disclosed, present at source but never ingested, or sitting in the platform and never retrieved? The tally came back 19 findings — 3 non-disclosure, 5 missing from the platform, 11 present and unread. The third class is the dangerous one: there a stated limitation is a misdescription, because the report says *cannot be known* when it means *we did not look*. I destroyed all 8, rebuilt the site to zero posts and closed the domain. A report that is 99% reliable is not kept.</p>
+<p>That question had already exposed a defect one layer down. One <code>INNER JOIN</code> against the question-and-answer table made 55.8% of the corpus text — 274,961,510 characters — unreadable to every stage of the programme: precisely the half where a company states its own capacity, customers and constraints before any analyst speaks. 47% of a later study&#x27;s cited material came from that half.</p>
+<p>The first six stations are what make the seventh survivable — a dated vision document, a frozen objective matrix (66 rows across 33 themes), a source census with an explicit gap column, an execution manifest of 48 units with budgets and fixed output paths, five gate programmes exiting 0 pass / 1 block / 2 warn-and-acknowledge, and a deliverable that ships its own limits.</p></div>
+<div class="artifact"><p class="eyebrow">The programme lifecycle — seven stations, gates between them, and the return arrow</p>
+<div class="dia"><svg viewBox="0 0 980 262" width="100%" role="img" aria-label="Seven research stations on a horizontal track with gates between them and a return arrow from falsification back to vision"><line x1="40" y1="96" x2="928" y2="96" stroke="currentColor" stroke-opacity=".3"/><g stroke="var(--t2)" stroke-opacity=".55"><path d="M136 86v20M142 86v20M274 86v20M280 86v20M412 86v20M418 86v20M550 86v20M556 86v20M688 86v20M694 86v20M826 86v20M832 86v20"/></g><g fill="none" stroke="currentColor"><circle cx="70" cy="96" r="15"/><circle cx="208" cy="96" r="15"/><circle cx="346" cy="96" r="15"/><circle cx="484" cy="96" r="15"/><circle cx="622" cy="96" r="15"/><circle cx="760" cy="96" r="15"/></g><circle cx="898" cy="96" r="15" fill="none" stroke="var(--gold)" stroke-width="2"/><g fill="currentColor" font-family="ui-monospace,monospace" font-size="12" text-anchor="middle"><text x="70" y="101">1</text><text x="208" y="101">2</text><text x="346" y="101">3</text><text x="484" y="101">4</text><text x="622" y="101">5</text><text x="760" y="101">6</text></g><text x="898" y="101" fill="var(--gold)" font-family="ui-monospace,monospace" font-size="12" text-anchor="middle">7</text><g fill="currentColor" font-family="ui-monospace,monospace" font-size="12" text-anchor="middle"><text x="70" y="140">Vision</text><text x="208" y="140">Objectives</text><text x="346" y="140">Source</text><text x="346" y="155">census</text><text x="484" y="140">Protocol</text><text x="622" y="140">Gates</text><text x="760" y="140">Deliverable</text></g><text x="898" y="140" fill="var(--gold)" font-family="ui-monospace,monospace" font-size="12" text-anchor="middle">Falsification</text><g fill="currentColor" fill-opacity=".62" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle"><text x="70" y="60">4 laws</text><text x="208" y="60">66 rows / 33 themes</text><text x="346" y="60">gap column</text><text x="484" y="60">48 units</text><text x="622" y="60">exit 0 / 1 / 2</text><text x="760" y="60">own limits</text><text x="898" y="60">19 findings</text></g><path d="M898 111v78H70v-70" fill="none" stroke="var(--gold)" stroke-dasharray="4 4"/><path d="M65 126l5-11 5 11" fill="none" stroke="var(--gold)"/><text x="484" y="210" fill="var(--gold)" font-family="ui-monospace,monospace" font-size="11" text-anchor="middle">a finished report re-enters as a hypothesis</text><text x="484" y="238" fill="currentColor" fill-opacity=".55" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">‖ = a gate that returns an exit status, not a checklist</text></svg></div>
+</div>
+</section>
+<section class="sec"><p class="eyebrow">Decisions</p><ul class="dec"><li><p>Chose gates that return an exit status over a prose quality checklist, because a checklist cannot refuse to pass work — five gate programmes sit at the seams of a run and exit 0 pass, 1 block, 2 warn-and-acknowledge, and the analysis units are required to read the second gate&#x27;s result file and answer its warnings in their own reasoning.</p></li><li><p>Chose a consolidated facts layer with disk-only analysis units over letting every unit read the raw filing extract, because 780 KB of source facts per company does not fan out to thirteen readers — consolidation reduces it to a 30–50 KB indexed document and the analysis units are forbidden the extraction tooling entirely, which also frees them from the single processing lock that serialises the run.</p></li><li><p>Chose to destroy 8 finished reports over correcting and republishing them, because the audit could not separate genuine non-disclosure from never-retrieved for every one of their 66 declared gaps, and a report that is 99% reliable is not kept — the failure record was preserved on purpose so the replacement process is built on what went wrong rather than on memory of it.</p></li></ul></section>
+<section class="sec"><p class="eyebrow">Evidence</p><div class="artifact"><p class="eyebrow">Research artifact · evidence ledger</p>
+<div class="tw"><table><thead><tr><th>Claim</th><th>How it was checked</th><th>Result</th></tr></thead><tbody><tr><td>The objective matrix that deliverables are actually checked against carries 66 rows across 33 themes — while the same document&#x27;s phase-map header declares 34 and the programme overview says 31. The specification is internally inconsistent, and the counted figure is the one published.</td><td>grep -cE &#x27;^\| \*{0,2}[0-9]+\.[0-9]+&#x27; $MATRIX → 66 ; grep -n &#x27;Phase Map&#x27; $MATRIX → header states 34</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The execution protocol specifies 48 units — 18 extraction, 13 analysis, 14 investigation, 3 assembly — each with a track, a budget, a lock requirement, a sequencing rule and a fixed output path, over a T=0 to T=28 minute three-track timeline.</td><td>sed -n &#x27;/Complete Agent Manifest/,/TOTAL/p&#x27; $PROTOCOL ; grep -c &#x27;^### &#x27; $PROTOCOL → 33 role and rule sections ; wc -l $PROTOCOL → 1,764</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>Quality is enforced by code, not prose: 5 executable gate programmes plus 4 editorial gates, running on 3,593 lines across 8 modules, of which 487 lines are a library of universal arithmetic checks.</td><td>ls $GATES/gate*.py | wc -l → 5 ; grep -c &#x27;^### Gate &#x27; $MATRIX → 4 ; wc -l $GATES/*.py → 3,593</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The governing document set counts 8,078 lines across 8 documents, and 3,562 across the 4 core ones. The programme overview&#x27;s own line-count claim reproduces against nothing in the current tree.</td><td>wc -l over the eight governing documents → 8,078 ; over the four core documents → 3,562</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The consolidation step reduces a 780 KB raw fact extract to a 30–50 KB indexed document, and the 13 analysis units are declared disk-only — they read that one file and are forbidden the extraction tooling.</td><td>grep -n &#x27;Consolidated Facts Layer&#x27; -A 8 $PROTOCOL ; wc -l on the consolidation module → 1,011 lines</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The withdrawn campaign was 8 reports (7 plus a baseline) across 7 tickers, carrying 66 declared limitation items.</td><td>python3 -c &quot;import json;m=json.load(open(&#x27;$CAMPAIGN/METHODOLOGY-ALL-2026-08-05.json&#x27;));print(m[&#x27;total_limitation_items&#x27;],len(m[&#x27;tickers_included&#x27;]))&quot;</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The falsification pass classified 19 findings — 3 H1 genuine non-disclosure, 5 H2 present at source but absent from the platform, 11 H3 present in the platform and never retrieved. H3 is the class where a stated limitation is a misdescription.</td><td>JSON tally over $CAMPAIGN/GAP-CLASSIFICATION-2026-08-05.json, compound verdicts assigned to their governing family</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>One INNER JOIN against the question-and-answer table made 55.8% of the corpus text — 274,961,510 characters — unreadable to every stage of the programme; 47% of a later study&#x27;s cited material came from that half.</td><td>Recorded in the study&#x27;s own build record at the time of the fix. Not re-derived in this pass: the character count and the 47% share were read back from the record, not re-run against the corpus.</td><td><span class="pill p-na">not testable</span></td></tr><tr><td>The workbench generates its judgment worklist rather than improvising it: 16 lines of inquiry crossed with a registry of 40 recognised methodologies, every cell tagged DATA, COMPUTE or JUDGE.</td><td>python3 -c &quot;import json;d=json.load(open(&#x27;$REGISTRY&#x27;));print(len(d[&#x27;lines&#x27;]),len(d[&#x27;methodologies&#x27;]))&quot; → 16 40</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The same plan-first shape recurs across the estate: 10 plan-class documents — design, architecture, protocol, pipeline, investigation-plan and methodology files — across the research roots.</td><td>find over the two research roots at depth 3 for PLAN*/DESIGN*/ARCHITECTURE*/*PROTOCOL*/PIPELINE*/*INVESTIGATION-PLAN*/METHODOLOGY* | wc -l → 10</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The pipeline is not autonomous. Its own automation ladder places current operation at Level 1, manual trigger, with semi-automated, event-driven and fully autonomous listed as near-term, future and aspirational.</td><td>grep -n &#x27;Level 1: Manual trigger&#x27; -A 12 $PIPELINE</td><td><span class="pill p-ok">verified</span></td></tr><tr><td>The six programmes converged on this shape independently, with no shared framework code.</td><td>Not tested. No import graph, scaffolding diff or copied-file check was run across the six roots; the convergence is an observation about document structure and dates, not a measurement.</td><td><span class="pill p-na">not testable</span></td></tr></tbody></table></div>
+</div><p class="note"><a href="/evidence/research-method/">Read the raw record →</a></p></section>
+<section class="sec"><p class="eyebrow">Limitations</p><ul class="plain"><li><p>This counts specifications, code and stored artifacts. It does not audit execution history — nothing here establishes how many companies completed a full gated run, or any success rate. The method is shown as design and as one falsification pass, not as a throughput record.</p></li><li><p>The pipeline runs at Level 1, manual trigger. There is no autonomy claim, and the units inside it are tooling under a protocol I wrote, not an unattended system.</p></li><li><p>Three of the six programmes are unfinished: the earnings-call platform is specified and partially built; the corpus-emergence study has a method built and run but no written note or rendered page; the workbench&#x27;s own README still lists compute frameworks blocked on remaining adapters and a render phase pending.</p></li><li><p>The supply-chain graph is not validated. Its audit verdict is structurally sound and economically about 90% valid, not fit to ship as-is, with named backwards edges, one exact duplicate and 5 missing edges that break exactly the read-through the platform wants.</p></li><li><p>The corpus studies measure language, not orders — a company can talk shortage to justify price and can stay silent about a real one. Nothing here is a market, causal or investment claim. The withdrawn reports were destroyed, not corrected: the site was rebuilt to zero posts and nothing was restored.</p></li></ul></section>
+<section class="sec"><p class="eyebrow">Links</p><div class="cta"><a class="btn" href="/evidence/research-method/">Evidence</a></div><p class="note">No demo — the programmes described here run inside a private operating environment, so there is nothing to open. The commands that produced every figure are published instead, on the record page.</p></section>
+<section class="sec"><p class="eyebrow">Authorship</p><div class="prose"><p>The vision documents, the objective matrix, the source censuses, the execution protocol, the gate programmes and the falsification plan are mine, written by hand over roughly five months. Agent units are tooling inside that protocol — they extract and draft against a fixed budget and one output path, and nothing they emit reaches a deliverable without clearing a gate I wrote. This page was drafted from a read-only pass over those documents, with every figure re-run on 2026-08-23.</p></div></section>
+</div></main>
+<footer><div class="wrap"><p class="auth">I architect and operate the systems described here; implementation is produced by the multi-agent organisation I run, and every number on this site was re-derived from source before publication.</p>
+<p class="fmeta">@TheKingHippopotamus · <a href="mailto:hi@king-hippopotamus.com">hi@king-hippopotamus.com</a> · <a href="https://github.com/TheKingHippopotamus">GitHub</a></p>
+</div></footer>
+</body>
+</html>

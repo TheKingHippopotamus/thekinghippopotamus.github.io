@@ -261,6 +261,49 @@ def check_gitleaks(repo: Path, mode: str) -> dict:
 # --------------------------------------------------------------------------- #
 # (b) identity-guard
 # --------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------- #
+# Owner carve-out literals (tools/identity-allow.txt): exact strings the owner
+# chose to publish (brand profile URLs, the brand mailbox). A finding is dropped
+# ONLY if its source line no longer matches any denylist rule once those exact
+# literals are removed. Nothing else is exempted; the file is itself published.
+def allowed_literals(repo: Path) -> list[str]:
+    for cand in (repo / "tools" / "identity-allow.txt", repo / "identity-allow.txt"):
+        if cand.exists():
+            return [l.strip() for l in cand.read_text(encoding="utf-8").splitlines()
+                    if l.strip() and not l.startswith("#")]
+    return []
+
+
+def line_without_literals(path: Path, lineno: int, literals: list[str]) -> str | None:
+    try:
+        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+        line = lines[int(lineno) - 1]
+    except Exception:
+        return None
+    if not any(l in line for l in literals):
+        return None
+    for l in literals:
+        line = line.replace(l, "[carve-out]")
+    return line
+
+
+def carved_out(repo: Path, file: str, lineno, literals: list[str]) -> bool:
+    if not literals or denylist_mod is None:
+        return False
+    stripped = line_without_literals(Path(file), lineno, literals)
+    if stripped is None:
+        return False
+    try:
+        return not denylist_mod.scan_text(stripped)
+    except AttributeError:
+        # vendored denylist without scan_text: fall back to rule re-run
+        for cat, entries in denylist_mod.CATEGORIES.items():
+            for _name, pat, _flag in entries:
+                if re.search(pat, stripped, re.I):
+                    return False
+        return True
+
+
 def check_identity_guard(repo: Path) -> dict:
     exe = find_identity_guard()
     if not exe:
@@ -290,10 +333,17 @@ def check_identity_guard(repo: Path) -> dict:
         if isinstance(items, list):
             parsed = True
             keep = []
+            lits = allowed_literals(repo)
             for it in items:
                 if isinstance(it, dict) and finding_self_excluded(repo, it):
                     excluded_n += 1
                     continue
+                if isinstance(it, dict) and lits:
+                    fpath = it.get("file") or it.get("path")
+                    ln = it.get("line") or it.get("lineno")
+                    if fpath and ln and carved_out(repo, str(fpath), ln, lits):
+                        excluded_n += 1
+                        continue
                 keep.append(it)
             n = len(keep)
             for it in keep[:40]:
@@ -326,6 +376,13 @@ def check_denylist(repo: Path) -> dict:
     excluded: list[str] = []
     try:
         findings = denylist_mod.scan_path(repo, excluded=excluded)
+        lits = allowed_literals(repo)
+        if lits:
+            kept = [f for f in findings if not carved_out(repo, f["file"], f["line"], lits)]
+            carved = len(findings) - len(kept)
+            findings = kept
+            if carved:
+                excluded.append("%d finding(s) on owner carve-out literals (tools/identity-allow.txt)" % carved)
     except denylist_mod.DenylistError as exc:
         return result("denylist", "denylist regex scan", FAIL, 1, [str(exc)])
     except TypeError:  # older vendored denylist.py without `excluded`

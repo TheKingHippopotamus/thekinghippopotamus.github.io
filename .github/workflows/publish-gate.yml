@@ -1,0 +1,79 @@
+# .github/workflows/publish-gate.yml
+# The same gate that runs pre-push, re-run on GitHub's runners so a
+# --no-verify push cannot land unscanned content.
+name: publish-gate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    env:
+      # Pin gitleaks. Version string taken from the operator workstation:
+      #   $ gitleaks version
+      #   8.30.1
+      GITLEAKS_VERSION: "8.30.1"
+      # sha256 of gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz, cross-checked
+      # against the release's gitleaks_8.30.1_checksums.txt.
+      GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # full history: the ci-mode gitleaks scan reads it
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pinned gitleaks (sha256-verified)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # No escape hatch. A digest that is missing, placeholder, or wrong
+          # FAILS this job: the gate must never run without its secret scanner.
+          case "${GITLEAKS_SHA256}" in
+            ""|TODO*|todo*)
+              echo "::error title=gitleaks digest missing::GITLEAKS_SHA256 is not a real digest."
+              echo "Refusing to install an unverified binary AND refusing to pass without it."
+              exit 1
+              ;;
+          esac
+          URL="https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          TAR="gitleaks.tar.gz"
+          curl -sSfL "$URL" -o "$TAR"
+          if ! echo "${GITLEAKS_SHA256}  ${TAR}" | sha256sum -c -; then
+            echo "::error title=gitleaks digest mismatch::downloaded tarball does not match the pinned sha256"
+            echo "expected: ${GITLEAKS_SHA256}"
+            echo "actual:   $(sha256sum "$TAR" | cut -d' ' -f1)"
+            exit 1
+          fi
+          mkdir -p "$HOME/.local/bin"
+          tar -xzf "$TAR" -C "$HOME/.local/bin" gitleaks
+          chmod +x "$HOME/.local/bin/gitleaks"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          "$HOME/.local/bin/gitleaks" version
+
+      - name: Verify gitleaks is on PATH
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v gitleaks >/dev/null || {
+            echo "::error::gitleaks is not on PATH after install -- the gate would run unscanned"; exit 1; }
+          gitleaks version
+
+      - name: Publish gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f tools/publish_gate.py || {
+            echo "::error::tools/publish_gate.py missing -- run install-hooks.sh and commit tools/"; exit 1; }
+          # A missing gitleaks is a FAIL inside publish_gate.py itself, so this
+          # job cannot go green with the secret scan switched off. identity-guard
+          # is absent on runners by design: it reports WARN, printed loudly.
+          python tools/publish_gate.py --mode ci --repo .

@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /work/
+Disallow: /ForensicAnalysis/
+Disallow: /HippoResearch/
+Disallow: /HippoResearch_Marketbeat/
+Disallow: /marketBit_archives/
+Disallow: /META_sell_side_research/
+Disallow: /Intel_sellSide_research/
+Disallow: /Odd-sell-side-research-/
+Disallow: /earnings-calendar/
+
+Sitemap: https://thekinghippopotamus.github.io/sitemap.xml

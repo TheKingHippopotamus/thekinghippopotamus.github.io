@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="index, follow">
+<meta name="description" content="One server, run as a small engineering office.">
+<title>About — King Hippopotamus</title>
+<link rel="canonical" href="https://thekinghippopotamus.github.io/about/">
+<style>
+:root{color-scheme:dark light;
+--bg:#0B0E13;--raise:#12161E;--sunk:#0E1219;--rule:#262D3D;--rule2:#333C50;
+--t1:#F2EDE8;--t2:#9B9589;--t3:#6B665C;
+--gold:#C9A227;--gold2:#E0B830;--ok:#3D9B6E;
+--serif:Georgia,'Times New Roman',serif;
+--sans:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+--mono:ui-monospace,Menlo,Consolas,monospace}
+@media (prefers-color-scheme:light){:root{
+--bg:#FBFAF6;--raise:#FFFFFF;--sunk:#F3F0E8;--rule:#E3DED2;--rule2:#CBC4B4;
+--t1:#14171D;--t2:#57534A;--t3:#7E7869;
+--gold:#8A6B10;--gold2:#6E5409;--ok:#2E7A55}}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--t1);font:16.5px/1.7 var(--sans);
+-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:0 24px}
+a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:3px}
+a:hover{text-decoration-color:currentColor}
+a:focus-visible{outline:2px solid var(--t1);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:var(--serif);font-weight:400;letter-spacing:-.01em}
+p{margin:0 0 14px}
+code{font:.88em var(--mono);background:var(--sunk);padding:1px 5px;border-radius:2px}
+.mast{border-bottom:1px solid var(--rule)}
+.mast .wrap{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:baseline;
+justify-content:space-between;padding-top:20px;padding-bottom:18px}
+.mark{font:600 15px/1.4 var(--sans);letter-spacing:.01em;text-decoration:none}
+.mast nav ul{display:flex;gap:20px;list-style:none;margin:0;padding:0;
+font:11.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase}
+.mast nav a[aria-current=page]{text-decoration-color:currentColor}
+main{padding-top:44px}
+h1{font-size:clamp(30px,6vw,40px);margin:0 0 8px;line-height:1.15}
+.handle{font:12px/1 var(--mono);letter-spacing:.11em;color:var(--t2);margin:0}
+.lede{font:19px/1.6 var(--serif);margin:20px 0 0;max-width:62ch}
+.stack{font:13.5px/1.7 var(--mono);color:var(--t2);margin:12px 0 0}
+.open{margin:22px 0 0;padding-top:16px;border-top:1px solid var(--rule);font-weight:600}
+.sec{margin:46px 0 0;padding-top:18px;border-top:1px solid var(--rule)}
+.lab{font:11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+color:var(--t3);margin:0 0 16px}
+h2{font-size:22px;margin:0 0 12px}h3{font-size:17px;margin:24px 0 8px}
+.proof,.plain{list-style:none;margin:0;padding:0}
+.proof li{font:14.5px/1.55 var(--mono);padding:10px 0;border-bottom:1px solid var(--rule)}
+.proof li:last-child,.plain li:last-child{border-bottom:0}
+.plain li{padding:12px 0;border-bottom:1px solid var(--rule)}
+.plain li>p:last-child,section>p:last-child{margin-bottom:0}
+.card{display:block;padding:20px 0;border-bottom:1px solid var(--rule);
+text-decoration:none}
+.card-t,.card-h,.card .meta{display:block}
+.card-t{font:21px/1.35 var(--serif);text-decoration:underline;
+text-decoration-thickness:1px;text-decoration-color:var(--rule2);text-underline-offset:4px}
+.card:hover .card-t{text-decoration-color:currentColor}
+.card-h{margin:8px 0 0;color:var(--t2);font-size:15.5px;line-height:1.6;max-width:60ch}
+.meta{margin:10px 0 0;font:11px/1.5 var(--mono);letter-spacing:.13em;
+text-transform:uppercase;color:var(--t3)}
+.artifact{background:var(--raise);border:1px solid var(--rule);
+border-top:2px solid var(--gold);padding:20px 22px;margin:20px 0}
+.artifact>.lab{color:var(--gold)}
+.artifact>:last-child{margin-bottom:0}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{text-align:left;font:11px/1.4 var(--mono);letter-spacing:.13em;text-transform:uppercase;
+color:var(--t3);padding:0 14px 9px 0;border-bottom:1px solid var(--rule2);white-space:nowrap}
+td{padding:12px 14px 12px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.badge{display:inline-block;font:10.5px/1.5 var(--mono);letter-spacing:.09em;
+text-transform:uppercase;padding:2px 7px;border:1px solid currentColor;border-radius:2px;
+white-space:nowrap}
+.b-ok{color:var(--ok)}.b-un{color:var(--t3)}.note{color:var(--t2);font-size:14.5px}
+.dia{color:var(--t2);margin:20px 0;overflow-x:auto}
+.dia svg{max-width:100%;height:auto;display:block}
+pre{background:var(--sunk);border:1px solid var(--rule);padding:16px;margin:0;
+overflow-x:auto;font:13px/1.65 var(--mono);white-space:pre-wrap;overflow-wrap:break-word}
+.draft{border-left:2px solid var(--rule2);padding-left:14px;color:var(--t2);
+font-size:14.5px;margin:0 0 26px}
+footer{margin-top:64px;border-top:1px solid var(--rule);padding:24px 0 56px}
+.auth{margin:0;font-size:13.5px;line-height:1.65;color:var(--t2);max-width:70ch}
+.fmeta{margin:16px 0 0;font:11px/1.8 var(--mono);letter-spacing:.11em;
+text-transform:uppercase;color:var(--t3)}
+@media (max-width:560px){main{padding-top:34px}.mast nav ul{gap:16px}}
+</style>
+</head>
+<body>
+<header class="mast"><div class="wrap">
+<a class="mark" href="/">King Hippopotamus</a>
+<nav aria-label="Primary"><ul><li><a href="/work/">Work</a></li><li><a href="/about/" aria-current="page">About</a></li><li><a href="/hire/">Hire</a></li><li><a href="https://github.com/TheKingHippopotamus">GitHub</a></li></ul></nav>
+</div></header>
+<main id="main"><div class="wrap">
+<h1>About</h1><p class="lede">One server, run as a small engineering office.</p><section class="sec"><p class="lab">How the work is run</p><p>Everything on this site is built and verified on a single Linux server that I run the way a small engineering office is run: with standing procedures rather than one-off commands.</p>
+<p>A scored security audit engine runs on a schedule and grades the host against its own baseline, so drift shows up as a falling number instead of a surprise. The container control plane is bound to the loopback interface and reachable only through an authenticated tunnel, which means no orchestration surface is exposed to the public internet at any point. Every consequential change is written to an append-only decision log before it is made, so the reason for a configuration is recoverable months later by reading rather than guessing.</p>
+<p>A publish gate sits in front of anything that leaves the machine. It refuses a push when the diff contains a credential, an internal hostname, a private address range or a local filesystem path, and it fails the build rather than stripping the match quietly. The generator behind this site runs the same gate against its own output: a URL that is not on the allowlist, or an identity pattern anywhere in the built pages, aborts the build.</p>
+<p>The method is the point. Agents write most of the implementation code; the specifications, the review gates and the acceptance criteria are mine, and nothing is published until the check has been re-run and recorded.</p></section>
+</div></main>
+<footer><div class="wrap"><p class="auth">I design, direct and verify multi-agent systems: I write the specifications, review gates and acceptance criteria; most implementation code is generated by AI agents under my review; every claim here was re-run and recorded before publication. Where a component is hand-written, the case study says so.</p>
+<p class="fmeta">@TheKingHippopotamus · <a href="mailto:hi@king-hippopotamus.com">hi@king-hippopotamus.com</a> · <a href="https://github.com/TheKingHippopotamus">GitHub</a></p>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,8 @@
+# Binary file extensions permitted in a published repo (no leading dot).
+png
+svg
+jpg
+jpeg
+webp
+ico
+woff2

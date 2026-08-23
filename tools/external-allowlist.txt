@@ -1,0 +1,5 @@
+# Hosts allowed to be requested from published pages.
+# One host per line. A leading dot matches subdomains (".github.io").
+# Default (when this file is absent): github.com and api.github.com only.
+github.com
+api.github.com

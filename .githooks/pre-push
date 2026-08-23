@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# pre-push: the publish gate. Installed by install-hooks.sh.
+set -euo pipefail
+REPO="$(git rev-parse --show-toplevel)"
+echo "pre-push: running publish gate (mode=prepush) on $REPO"
+if ! python3 "$REPO/tools/publish_gate.py" --mode prepush --repo "$REPO"; then
+  echo "pre-push: GATE FAILED -- push refused." >&2
+  echo "pre-push: fix the findings above, or (deliberate override) git push --no-verify" >&2
+  exit 1
+fi
+echo "pre-push: gate passed."

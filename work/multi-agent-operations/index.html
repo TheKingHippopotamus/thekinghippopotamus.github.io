@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="index, follow">
+<meta name="description" content="I wrote the office&#x27;s constitution — roles, escalation, write scopes, tool-call caps — then built the gate enforcing it against every page, including mine.">
+<title>Multi-agent operations architecture — King Hippopotamus</title>
+<link rel="canonical" href="https://thekinghippopotamus.github.io/work/multi-agent-operations/">
+<style>:root{color-scheme:dark light;--ink:#0B0E13;--raise:#12161E;--raise2:#1A1F2B;--sunk:#090C11;--rule:#262D3D;--rule2:#333C50;--t1:#F2EDE8;--t2:#9B9589;--t3:#6B665C;--gold:#C9A227;--gold2:#E0B830;--ok:#3D9B6E;--warn:#C4A235;--bad:#C4503A;--display:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;--sans:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;--mono:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace}@media (prefers-color-scheme:light){:root{--ink:#ECEEEB;--raise:#F8F9F7;--raise2:#FFFFFF;--sunk:#E2E5E1;--rule:#CDD2CC;--rule2:#A7AFA6;--t1:#10151B;--t2:#4C555E;--t3:#6F7880;--gold:#8A6B10;--gold2:#6E5409;--ok:#2E7A55;--warn:#7A5F0E;--bad:#A83A24}}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--t1);font:16.5px/1.65 var(--sans);
+-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:0 26px}
+.wide{max-width:1040px}
+a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:3px}
+a:hover{text-decoration-color:currentColor}
+a:focus-visible{outline:2px solid var(--gold2);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.02em}
+p{margin:0 0 15px}
+code{font:.9em var(--mono)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:14px;top:14px;background:var(--raise);padding:9px 14px;z-index:9}
+.mast{border-bottom:1px solid var(--rule)}
+.mast .wrap{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:baseline;
+justify-content:space-between;padding-top:18px;padding-bottom:16px}
+.mark{font:600 14px/1.4 var(--sans);letter-spacing:.02em;text-decoration:none}
+.mast nav ul{display:flex;flex-wrap:wrap;gap:9px 20px;list-style:none;margin:0;padding:0;
+font:11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.mast nav a{text-decoration-color:transparent}
+.mast nav a:hover,.mast nav a[aria-current=page]{text-decoration-color:currentColor}
+main{padding-top:clamp(38px,7vw,80px)}
+h1{font-size:clamp(40px,6vw,72px);line-height:1.02;margin:0}
+h2{font-size:26px;margin:0 0 12px}h3{font-size:18px;margin:26px 0 8px}
+.thesis{font:clamp(19px,2.2vw,25px)/1.42 var(--display);letter-spacing:-.015em;
+margin:28px 0 0;max-width:46ch}
+.thesis2{margin:20px 0 0;color:var(--t2);font-size:16.5px;line-height:1.72;max-width:60ch}
+.roles{display:flex;flex-wrap:wrap;gap:12px 0;margin:32px 0 0;padding:0;list-style:none;
+font:11.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--t2)}
+.roles li{padding:0 16px;border-left:1px solid var(--rule2)}
+.roles li:first-child{padding-left:0;border-left:0}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin:34px 0 0}
+.btn{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;
+text-transform:uppercase;padding:14px 22px;border:1px solid var(--rule2);
+text-decoration:none;transition:border-color .15s ease,background-color .15s ease}
+.btn:hover{border-color:var(--t2);background:var(--raise)}
+.btn-p{border-color:var(--t1)}
+.avail{margin:22px 0 0;font:12px/1.6 var(--mono);letter-spacing:.05em;color:var(--t3)}
+.sec{margin:clamp(52px,8vw,86px) 0 0}
+.sub{margin:clamp(34px,5vw,52px) 0 0}
+.eyebrow{display:flex;align-items:center;gap:12px;font:11px/1 var(--mono);
+letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+.eyebrow::before{content:"";width:26px;height:1px;background:currentColor;flex:0 0 auto}
+.sec-note{margin:0 0 22px;color:var(--t2);font-size:15px;max-width:66ch}
+.grid{display:grid;gap:1px}
+.grid>*{box-shadow:0 0 0 1px var(--rule)}
+.pkgs{grid-template-columns:1fr}
+.cell{background:var(--raise);padding:20px 20px 18px}
+.cmd{display:block;font:13.5px/1.5 var(--mono);color:var(--t1);overflow-wrap:anywhere}
+.cmd::before{content:"$ ";color:var(--t3)}
+.pkg-meta{margin:15px 0 0;font:10.5px/1 var(--mono);letter-spacing:.13em;
+text-transform:uppercase;color:var(--t3);display:flex;flex-wrap:wrap;gap:9px;
+align-items:baseline}
+.ver{font-size:16px;letter-spacing:0;color:var(--gold);font-variant-numeric:tabular-nums}
+.pkg-cli{margin:11px 0 0;font:12px/1.5 var(--mono);color:var(--t2)}
+.pkg-more{margin:13px 0 0;font:10.5px/1 var(--mono);letter-spacing:.14em;
+text-transform:uppercase}
+.cards{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--raise);padding:26px 24px 22px;text-decoration:none;display:block;
+transition:background-color .15s ease}
+.card:hover{background:var(--raise2)}
+.card:hover .card-t{text-decoration-color:currentColor}
+.card-dom{display:block;font:10.5px/1 var(--mono);letter-spacing:.18em;
+text-transform:uppercase;color:var(--t3);margin:0 0 15px}
+.card-t{display:block;font:clamp(22px,2.4vw,28px)/1.2 var(--display);letter-spacing:-.02em;
+text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:5px}
+.card-h{display:block;margin:12px 0 0;color:var(--t2);font-size:15px;line-height:1.6;
+max-width:52ch}
+.card-foot{display:flex;align-items:flex-end;gap:16px;margin:26px 0 0;padding:16px 0 0;
+border-top:1px solid var(--rule)}
+.big{font:400 clamp(30px,4vw,48px)/.88 var(--display);color:var(--gold);
+font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.big-lab{font:10.5px/1.35 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+color:var(--t3);max-width:22ch;padding-bottom:3px}
+.card-f{grid-column:1/-1}
+.card-f .card-h{max-width:64ch}
+.soon{color:var(--t2);display:flex;flex-direction:column;justify-content:center}
+.soon .card-dom{color:var(--t3)}
+.soon p{font-size:15px;line-height:1.6;margin:0;max-width:44ch}
+.caps{grid-template-columns:repeat(3,1fr)}
+.cap{background:var(--raise);padding:26px 24px 22px;display:flex;flex-direction:column}
+.cap-t{font:clamp(19px,2vw,23px)/1.25 var(--display);letter-spacing:-.02em;margin:0 0 13px}
+.cap-b{color:var(--t2);font-size:14.5px;line-height:1.65;margin:0;flex:1 1 auto}
+.how{grid-template-columns:repeat(3,1fr)}
+.how .cell{padding:24px 22px 22px}
+.how-l{font:10.5px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 15px}
+.how-t{font:17px/1.55 var(--display);margin:0;color:var(--t1)}
+.ledger{grid-template-columns:repeat(4,1fr);margin:26px 0 0}
+.ledger .cell{padding:18px 18px 16px}
+.led-v{font:22px/1.1 var(--mono);letter-spacing:-.02em;color:var(--t1);margin:0;
+font-variant-numeric:tabular-nums}
+.led-l{font:10px/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+color:var(--t3);margin:10px 0 0}
+@media (max-width:620px){.ledger{grid-template-columns:repeat(2,1fr)}}
+.plain{list-style:none;margin:0;padding:0}
+.plain li{padding:13px 0;border-bottom:1px solid var(--rule)}
+.plain li:last-child{border-bottom:0}
+.plain li>p:last-child{margin-bottom:0}
+.kicker{font:11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 20px}
+.lede{font:clamp(20px,2.7vw,29px)/1.35 var(--display);letter-spacing:-.02em;
+margin:24px 0 0;max-width:34ch}
+.lede-w{max-width:46ch}
+.prose p{max-width:68ch;line-height:1.75;margin:0 0 20px}
+.prose>:last-child{margin-bottom:0}
+.artifact{background:var(--raise);border:1px solid var(--rule);
+border-top:2px solid var(--gold);padding:22px 22px 20px;margin:22px 0}
+.artifact>.eyebrow{margin-bottom:18px}
+.artifact>:last-child{margin-bottom:0}
+.dec{list-style:none;counter-reset:d;margin:0;padding:0;display:grid;gap:1px}
+.dec li{box-shadow:0 0 0 1px var(--rule)}
+.dec li{counter-increment:d;background:var(--raise);padding:20px 22px 18px}
+.dec li::before{content:counter(d,decimal-leading-zero);display:block;
+font:11px/1 var(--mono);letter-spacing:.16em;color:var(--t3);margin:0 0 13px}
+.dec p{max-width:64ch;line-height:1.7}
+.dec p:last-child{margin-bottom:0}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font:10.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+color:var(--t3);padding:0 14px 10px 0;border-bottom:1px solid var(--rule2);white-space:nowrap}
+td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule);vertical-align:top;
+font:13px/1.6 var(--mono)}
+tr:last-child td{border-bottom:0}
+.spec td:first-child{color:var(--t3);width:36%}
+.pill{display:inline-block;font:10px/1.5 var(--mono);letter-spacing:.1em;
+text-transform:uppercase;padding:2px 9px;border:1px solid currentColor;border-radius:999px;
+white-space:nowrap}
+.p-ok{color:var(--ok)}.p-no{color:var(--bad)}.p-na{color:var(--warn)}
+.note{color:var(--t2);font-size:14.5px}
+.dia{color:var(--t2);margin:0;overflow-x:auto}
+.dia svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure{margin:24px 0}
+figcaption{font:11px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+color:var(--t3);margin:0 0 11px}
+pre{background:var(--sunk);border:1px solid var(--rule);border-left:2px solid var(--rule2);
+padding:17px 19px;margin:0;overflow-x:auto;font:12.5px/1.7 var(--mono);
+white-space:pre-wrap;overflow-wrap:break-word}
+.term{max-height:min(66vh,620px);overflow:auto;white-space:pre;color:var(--t2);
+line-height:1.75;border-left-color:var(--rule)}
+.term i{color:var(--t1);font-style:normal}
+.term-note{margin:0 0 16px;color:var(--t2);font-size:14.5px;max-width:66ch}
+.pending{border-left:2px solid var(--warn);padding:3px 0 3px 17px;color:var(--t2);
+font-size:14.5px;margin:0;max-width:68ch}
+.tldr ul,ul.tldr{list-style:none;padding:0;margin:0;display:grid;gap:8px}ul.tldr li{padding:10px 14px;border:1px solid var(--rule);border-radius:2px;font-family:var(--sans);font-size:15px;line-height:1.5}ul.tldr li::before{content:'— ';color:var(--gold)}
+.draft{border-left:2px solid var(--warn);padding:3px 0 3px 17px;color:var(--t2);
+font-size:14.5px;margin:26px 0 0;max-width:64ch}
+.held{margin:0 0 40px}
+.approval{margin:clamp(46px,7vw,72px) 0 0;padding:14px 0 0;border-top:1px solid var(--rule);
+font:10.5px/1.7 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
+.plist{grid-template-columns:repeat(2,1fr)}
+.pc{background:var(--raise);padding:24px 24px 20px;text-decoration:none;display:flex;
+flex-direction:column;transition:background-color .15s ease}
+.pc:hover{background:var(--raise2)}
+.pc:hover .pc-n{text-decoration-color:currentColor}
+.pc-k{font:10.5px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;
+color:var(--t3);margin:0 0 14px}
+.pc-n{font:clamp(21px,2.2vw,26px)/1.15 var(--display);letter-spacing:-.02em;margin:0;
+text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:5px}
+.pc-o{margin:11px 0 0;color:var(--t2);font-size:14.5px;line-height:1.6;flex:1 1 auto}
+.pc-f{margin:20px 0 0;padding:15px 0 0;border-top:1px solid var(--rule);
+font:12.5px/1.5 var(--mono);color:var(--t1);overflow-wrap:anywhere}
+.pc-f::before{content:"$ ";color:var(--t3)}
+.pc-v{margin:9px 0 0;font:10.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;
+color:var(--t3)}
+.plist>:last-child:nth-child(odd){grid-column:span 2}
+.plist>:last-child:nth-child(odd) .pc-o,
+.plist>:last-child:nth-child(odd) .pc-n{max-width:56ch}
+.facts{grid-template-columns:repeat(5,1fr);margin:34px 0 0}
+.facts .cell{padding:17px 16px 15px}
+.fact-v{margin:0;font:19px/1.15 var(--mono);color:var(--t1);font-variant-numeric:tabular-nums;
+overflow-wrap:anywhere}
+.fact-l{margin:9px 0 0;font:10px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+color:var(--t3)}
+.phead{font:11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--t3);
+margin:0 0 18px}
+.install{margin:30px 0 0;background:var(--sunk);border:1px solid var(--rule2);
+padding:16px 18px;font:14px/1.5 var(--mono);color:var(--t1);overflow-wrap:anywhere}
+.install::before{content:"$ ";color:var(--t3)}
+.lay{margin:clamp(34px,5vw,50px) 0 0}
+.lay-h{border-bottom:1px solid var(--rule2);padding:0 0 13px;margin:0 0 20px}
+.lay-t{font:10.5px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 9px}
+.lay-n{font:21px/1.2 var(--display);letter-spacing:-.02em;margin:0}
+.lay-s{margin:9px 0 0;color:var(--t2);font-size:14.5px;max-width:66ch}
+.feat{grid-template-columns:repeat(2,1fr)}
+.ft{background:var(--raise);padding:22px 22px 20px;display:flex;flex-direction:column}
+.ft-b{align-self:flex-start;font:10px/1.5 var(--mono);letter-spacing:.14em;
+text-transform:uppercase;color:var(--t3);border:1px solid var(--rule2);border-radius:999px;
+padding:2px 10px;margin:0 0 15px}
+.ft-t{font:17px/1.35 var(--display);letter-spacing:-.01em;margin:0 0 10px}
+.ft-b2{margin:0 0 16px;color:var(--t2);font-size:14.5px;line-height:1.65;flex:1 1 auto}
+.ft pre{font-size:11.5px;line-height:1.7;padding:13px 15px;white-space:pre;overflow-x:auto}
+.feat>:last-child:nth-child(odd){grid-column:span 2}
+.feat>:last-child:nth-child(odd) .ft-t,
+.feat>:last-child:nth-child(odd) .ft-b2{max-width:58ch}
+.stations{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:1px}
+.stations>li{counter-increment:s;background:var(--raise);box-shadow:0 0 0 1px var(--rule);
+padding:22px 24px 20px;display:grid;grid-template-columns:52px 1fr;gap:0 18px}
+.st-n{font:11px/1.7 var(--mono);letter-spacing:.16em;color:var(--t3)}
+.st-n::before{content:counter(s,decimal-leading-zero)}
+.st-t{font:20px/1.25 var(--display);letter-spacing:-.02em;margin:0 0 10px}
+.st-x{margin:0;font-size:15px;line-height:1.7;color:var(--t1);max-width:62ch}
+.st-a{margin:15px 0 0;padding:12px 0 0;border-top:1px solid var(--rule);
+font:12px/1.7 var(--mono);color:var(--t2);max-width:72ch}
+.st-a b{font-weight:400;letter-spacing:.14em;text-transform:uppercase;font-size:10px;
+color:var(--t3)}
+.deck{grid-template-columns:repeat(2,1fr)}
+.dk{background:var(--raise);padding:22px 22px 20px}
+.dk-l{margin:0 0 13px;font:10.5px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3)}
+.dk-t{margin:0;font-size:14.5px;line-height:1.7;color:var(--t1)}
+.lab{list-style:none;margin:0;padding:0;display:grid;gap:1px}
+.lab>li{background:var(--raise);box-shadow:0 0 0 1px var(--rule);padding:22px 24px 20px;
+display:grid;grid-template-columns:132px 1fr;gap:4px 22px}
+.lab-d{font:12px/1.7 var(--mono);color:var(--t2);font-variant-numeric:tabular-nums}
+.lab-t{font:20px/1.25 var(--display);letter-spacing:-.02em;margin:0}
+.lab-f{margin:15px 0 0;font:12.5px/1.75 var(--mono);color:var(--t2);max-width:76ch}
+.lab-f b{display:block;margin:0 0 4px;font-weight:400;font-size:10px;letter-spacing:.16em;
+text-transform:uppercase;color:var(--t3)}
+.lab-s{margin:10px 0 0}
+footer{margin-top:clamp(70px,10vw,116px);border-top:1px solid var(--rule);padding:26px 0 60px}
+.auth{margin:0;font-size:13.5px;line-height:1.7;color:var(--t2);max-width:72ch}
+.fmeta{margin:16px 0 0;font:10.5px/1.9 var(--mono);letter-spacing:.13em;
+text-transform:uppercase;color:var(--t3)}
+@media (min-width:600px){.pkgs{grid-template-columns:repeat(2,1fr)}
+.pkgs>:last-child{grid-column:span 2}}
+@media (min-width:900px){.pkgs{grid-template-columns:repeat(3,1fr)}
+.pkgs>:last-child{grid-column:auto}}
+@media (max-width:900px){.caps{grid-template-columns:1fr}.facts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:820px){.cards,.how,.plist,.feat,.deck{grid-template-columns:1fr}
+.card-f{grid-column:auto}}
+@media (max-width:640px){.roles{flex-direction:column;align-items:flex-start;gap:9px}
+.roles li{border-left:0;padding:0}
+.stations>li,.lab>li{grid-template-columns:1fr;gap:10px}
+.st-n{letter-spacing:.2em}}
+@media (max-width:560px){main{padding-top:34px}.mast nav ul{gap:8px 14px}
+.thesis{max-width:none}.facts{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+:root[data-scheme=dark]{--ink:#0B0E13;--raise:#12161E;--raise2:#1A1F2B;--sunk:#090C11;--rule:#262D3D;--rule2:#333C50;--t1:#F2EDE8;--t2:#9B9589;--t3:#6B665C;--gold:#C9A227;--gold2:#E0B830;--ok:#3D9B6E;--warn:#C4A235;--bad:#C4503A}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast"><div class="wrap">
+<a class="mark" href="/">King Hippopotamus</a>
+<nav aria-label="Primary"><ul><li><a href="/">Home</a></li><li><a href="/work/" aria-current="page">Work</a></li><li><a href="/products/">Products</a></li><li><a href="/method/">Method</a></li><li><a href="/lab/">Lab</a></li><li><a href="/about/">About</a></li><li><a href="/hire/">Hire</a></li></ul></nav>
+</div></header>
+<main id="main"><div class="wrap">
+<p class="kicker">Case study</p>
+<h1>Multi-agent operations architecture</h1>
+<p class="lede">I wrote the office&#x27;s constitution — roles, escalation, write scopes, tool-call caps — then built the gate enforcing it against every page, including mine.</p>
+<section class="sec"><p class="eyebrow">Context</p><div class="prose"><p>A delegated unit fails in a specific way, and it is not the way people expect. It does not refuse the work. It produces a plausible artifact, states a number it never measured, and the number propagates into published copy because the next stage reads the artifact rather than the world.</p>
+<p>The cheap version of this cost a run once: a 3.7 KB extraction passed an existence check against an 89 KB peer, and the gap cascaded through every downstream stage. The fix was not a better instruction. It was a check that compares file sizes against a minimum and exits non-zero.</p>
+<p>So the office is written down before anything is delegated — who may decide what alone, what must escalate, where each stage may write, how many tool calls it gets, and what condition it has to satisfy before it may hand its work on. The organisation is the design. The gate is what makes the design real, and it runs on my own pages under the same terms as everything else.</p></div></section>
+<section class="sec"><p class="eyebrow">What I built</p><div class="prose"><p>Eight charter files define seven seats across four departments — forensic research, market research, security, and a four-seat data office. A charter is not a prompt. It declares the seat, the ground it may decide on alone, the ground it must escalate, its hard laws, and a closing form that will not accept the word <strong>done</strong> without the output it rests on, duration and an explicit full-or-partial state; <code>partial</code> keeps the task open. Authority is written as a boundary rather than a permission: a department may fix anything it likes behind the gate, and may not move the gate.</p>
+<p>Below the charters sits the part that is mechanical. The publish pipeline runs six stages, each with a single writable root; the five worker stages also carry a hard tool-call cap — 40, 60, 15, 40, 50 — 205 calls per project before any work starts. The fifth stage runs in a fresh context, sees only the evidence file and the built page, never the earlier stages&#x27; reasoning, and re-runs every command those stages claimed to have run. Two consecutive failures there freeze the project: a reduced variant ships and the queue moves on. At the publication boundary sits a gate of 7 checks and 43 denylist patterns; the one path that can still be skipped rather than failed warns loudly and is named in the record.</p>
+<p>The gate runs against every page the pipeline produces. The opening case study came back <strong>FAIL</strong> — six claim-level mismatches and two imprecisions, one of them the audit stage&#x27;s own stated command failing to reproduce its own number. It stayed unpublished until the arithmetic matched.</p></div>
+<div class="artifact"><p class="eyebrow">The six-stage pipeline — one writable root per lane, a cap on each worker lane, the verify lane severed, the stop rule returning</p>
+<div class="dia"><svg viewBox="0 0 1000 420" width="100%" role="img" aria-label="Six-stage publish pipeline drawn as swimlanes; each lane names its single writable root, its tool-call cap and the condition it must satisfy to advance. The verify lane is severed from the lanes above it, and a return arrow carries the stop rule back to the fix lane."><g font-family="ui-monospace,monospace"><g fill="none"><g stroke="currentColor" stroke-opacity=".22"><rect x="40" y="32" width="940" height="44"/><rect x="40" y="86" width="940" height="44"/><rect x="40" y="140" width="940" height="44"/><rect x="40" y="194" width="940" height="44"/><rect x="40" y="320" width="940" height="44"/></g><g stroke="var(--gold)" stroke-opacity=".85"><rect x="40" y="266" width="940" height="44" stroke-dasharray="5 4"/><path d="M40 248h940" stroke-dasharray="6 5"/><path d="M40 288H16V108h24" stroke-dasharray="4 4"/><path d="M30 103l10 5-10 5"/></g></g><g fill="currentColor" fill-opacity=".5" font-size="10"><text x="52" y="20">stage</text><text x="185" y="20">one writable root</text><text x="580" y="20">cap</text><text x="650" y="20">gate to advance</text><text x="40" y="388">40 + 60 + 15 + 40 + 50 = 205 tool calls allocated per project before the work starts</text></g><g fill="currentColor" font-size="12"><text x="52" y="59">audit</text><text x="580" y="59">40</text><text x="52" y="113">fix</text><text x="580" y="113">60</text><text x="52" y="167">secure</text><text x="580" y="167">15</text><text x="52" y="221">package</text><text x="580" y="221">40</text><text x="52" y="347">publish</text><text x="580" y="347">—</text></g><g fill="currentColor" fill-opacity=".72" font-size="11"><text x="185" y="59">read-only source; its own evidence file</text><text x="650" y="59">every claim carries a runnable command</text><text x="185" y="113">a clean-room worktree, nothing else</text><text x="650" y="113">source tree unchanged since stage start</text><text x="185" y="167">runs the gate; writes nothing</text><text x="650" y="167">all 7 checks exit 0</text><text x="185" y="221">the site clean-room only</text><text x="650" y="221">no external request; no unfilled token</text><text x="185" y="293">fresh context: evidence file + built page</text><text x="650" y="293">zero mismatches; zero unverified claims</text><text x="185" y="347">pushes from the clean-room</text><text x="650" y="347">pre-push gate, then a live fetch returns OK</text></g><g fill="var(--gold)"><text x="52" y="293" font-size="12">verify</text><text x="580" y="293" font-size="12">50</text><text x="980" y="262" font-size="10" text-anchor="end">severed: verify re-runs the earlier commands, never reads their reasoning</text><text x="40" y="406" font-size="10">stop rule: two consecutive verify failures freeze the project — a reduced variant ships, the queue moves on</text></g></g></svg></div>
+</div>
+<figure><figcaption>The independent verifier&#x27;s verdict on the pipeline&#x27;s own first case study</figcaption><pre>VERDICT: FAIL
+
+  build ............... PASS
+  publish gate ........ FAIL   4 pass / 2 fail
+  identity scan ....... PASS
+  style ............... PASS
+  claim-by-claim ...... FAIL   6 mismatches, 2 imprecisions
+
+  mismatch 1/6   the audit stage&#x27;s own stated counting command does
+                 not reproduce the audit stage&#x27;s own number: six of
+                 the matched lines were prose about the decorator,
+                 not the decorator itself
+
+  note           the page&#x27;s story survives verification. The
+                 interesting facts are real and reproduced. The
+                 arithmetic is not, so the page does not ship.</pre></figure>
+</section>
+<section class="sec"><p class="eyebrow">Decisions</p><ul class="dec"><li><p>Chose an independent verify stage that re-runs the commands over accepting the fixing stage&#x27;s report, because a stage can produce a plausible artifact and state a number it never measured — the verifier runs in a fresh context, is handed only the evidence file and the built page, never sees the earlier stages&#x27; reasoning, and its gate to advance is zero mismatches and zero unverified claims; the first case study of the week came back FAIL with six of them.</p></li><li><p>Chose per-stage write scopes and tool-call caps over instructions asking a unit to be careful, because a limit written in prose is advice and a limit written into the stage definition is arithmetic — the fix stage writes only into a clean-room worktree and its gate to advance is mechanical rather than declarative: the source tree&#x27;s <code>git status --porcelain</code> unchanged, plus a modification-time sweep over the source since stage start that returns empty.</p></li><li><p>Chose a machine denylist at the publication boundary over the written identity policy alone, because the policy depends on every seat remembering it while the gate catches the forgetting — the written policy stayed and became 43 patterns across 5 categories run as one of 7 checks, and the gate was itself tested with a seeded-leak fixture before it was trusted, which is how two defects in the gate were caught and re-verified after fixing.</p></li></ul></section>
+<section class="sec"><p class="eyebrow">Evidence</p><div class="artifact"><p class="eyebrow">Research artifact · evidence ledger</p>
+<div class="tw"><table><thead><tr><th>Claim</th><th>How it was checked</th><th>Status</th></tr></thead><tbody><tr><td>The roster is 8 charter files covering 7 distinct seats, with 1 retired role kept in the archive — one role carries two profiles, which is why 8 files map to 7 seats. Together they run to 1,231 lines and 134,477 bytes, and every data-office seat carries an identical section headed &quot;Closing a task (MANDATORY, tool-enforced)&quot;.</td><td>ls -1 &lt;roster&gt;/*.md | wc -l → 8 ; grep -h &#x27;^name:&#x27; &lt;roster&gt;/*.md | grep -v &#x27;{{&#x27; | sort -u | wc -l → 8 declared names, two of which name the same role (a full role card and a lighter orchestrator card) → 7 distinct seats ; ls -1 &lt;roster&gt;/_archive/ → 1 retired role, date in the filename ; cat &lt;roster&gt;/*.md | wc -lc → 1231 134477 ; grep -nE &#x27;^#{1,3} &#x27; over the data-office charters → the same spine in each</td><td><span class="pill p-ok">published</span></td></tr><tr><td>Written doctrine is 16 operating rules held in the operating memory, inside an index of 37 entries — 16 rules, 14 project-state records, 6 references and the standing brief. Three of the sixteen have mechanical enforcement; the rest are conventions that depend on being read at session start.</td><td>ls -1 &lt;memory&gt;/feedback_*.md | wc -l → 16 ; ls -1 &lt;memory&gt;/reference_*.md | wc -l → 6 ; ls -1 &lt;memory&gt;/project_*.md | wc -l → 14 ; grep -cE &#x27;^- \[&#x27; &lt;memory&gt;/index → 37</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The publish pipeline is 6 stages, each with one writable root, and a hard tool-call cap on the five worker stages — audit 40, fix 60, secure 15, package 40, verify 50 — for 205 calls allocated per project before the work starts, under an execution plan carrying 9 non-negotiable guardrails and a stop rule that freezes a project after two consecutive verify failures.</td><td>sed -n &#x27;/Per-project pipeline/,/Stop rule/p&#x27; &lt;plan&gt; → the six stages with scope, cap and gate ; grep -cE &#x27;^[0-9]+\. &#x27; over the guardrails section → 9</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The written identity policy runs to 8 sections and defines the forbidden identifier classes; the gate turns it into machine work — 43 denylist patterns across 5 categories (11 topology, 5 identity, 16 content-legal, 6 disclosure, 5 tone), run as one of 7 checks that must all exit 0 before anything leaves the clean-room.</td><td>grep -cE &#x27;^## &#x27; &lt;policy&gt; → 8 ; grep -oE &#x27;def check_[a-z_]+&#x27; &lt;the gate program&gt; | sort -u | wc -l → 7 ; AST count over every pattern list in the gate&#x27;s pattern module → 11 / 5 / 16 / 6 / 5 = 43</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The gate was tested before it was trusted: a fixture seeded with deliberate leaks returned 0 pass / 6 fail against the six checks the gate carried that morning, with every seeded item named by category, and a clean fixture returned 6 pass / 0 fail, exit 0. The self-test also re-verified the fix for 2 defects in the gate itself — a silent skip when one scanner was absent, and a skip-not-fail mode — one turned into a hard failure and one forced to run rather than skip, both re-verified.</td><td>grep -nE &#x27;RESULT: (PASS|FAIL)&#x27; &lt;the gate self-test record&gt; → dirty fixture FAIL 0/6 ; clean fixture PASS 6/0 ; sections 3 and 4 record the two gate defects and their re-verification, section 5 the path that still warns rather than fails</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The verifier failed its own author. On the first case study of the publish week it returned a verdict of FAIL — 6 claim-level mismatches and 2 imprecisions, including a handler count that appeared four times in published copy and was wrong by three, and the finding that the audit stage&#x27;s own stated counting command did not reproduce the audit stage&#x27;s own number.</td><td>sed -n &#x27;1,40p&#x27; &lt;the verifier&#x27;s verdict record&gt; → VERDICT: FAIL ; build PASS ; gate FAIL 4/2 ; identity PASS ; style PASS ; claim-by-claim FAIL — 6 mismatches, 2 imprecisions</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The same standard is applied to the estate&#x27;s own published packages rather than reporting a clean sheet: the day&#x27;s end-to-end harness reads 15 pass / 1 fail, and three of those rows are fresh installs of the published releases, each installed from the index and then run — those three pass; the one failure is the harness&#x27;s check that the version the published site states for one package matches the index, because the live site predates this run, and it is published as it stands.</td><td>the end-to-end harness record for 2026-08-23, run of 18:59 → 15 pass / 1 fail, its three fresh-install rows passing against the published releases; the harness keeps one record per date and overwrites it, so the figure quoted is that date&#x27;s record as it stands, at the timestamp its own header carries</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The recon that produced this week&#x27;s plan ran as 10 parallel read-only investigations — 7 audit seats plus 3 planning lenses — feeding one orchestrator.</td><td>the plan&#x27;s verified-facts section names the 7 read-only audit seats and the 3 planning lenses</td><td><span class="pill p-ok">published</span></td></tr></tbody></table></div><p class="note standing">12 claims tested · 8 published · 4 withdrawn before publication. Full evidence record available on request — <a href="mailto:hi@king-hippopotamus.com">hi@king-hippopotamus.com</a>.</p>
+</div><p class="note"><a href="/evidence/multi-agent-operations/">Published claims and the verification policy →</a></p></section>
+<section class="sec"><p class="eyebrow">Limitations</p><ul class="plain"><li><p>This is not a running autonomous organisation, and nothing here claims one. The roster is charter files loaded per session: no scheduler runs a seat, no seat is a daemon, and nothing on the host establishes that two seats ever ran concurrently under their charters. What is shown is that the roles, authorities, escalation paths and write scopes are written down, referenced, and in three places mechanically enforced.</p></li><li><p>The design is built to stop, not to proceed. Deletion, host change, new exposure, credentials and spend are all human-required by charter, and this week&#x27;s plan allocates the human exactly one action per day. That is deliberate, and it is also a ceiling on how much of this can be described as automated.</p></li><li><p>The 16 doctrine rules are written and only partially mechanised. Three carry mechanical enforcement — size-checked gate conditions, the publish gate, the identity denylist. The rest are conventions that depend on being read. Nor are all sixteen incident-derived: most name the run that produced them, but at least two are standing practice rather than a post-mortem — a dated changelog entry at the end of every session, and the expectation that a unit brings its own domain expertise instead of restating the brief.</p></li><li><p>There is no measured cost and no claim that every published page is verified. The plan declares a token envelope per project and per week, and an envelope is a plan rather than a measurement — no per-run cost or token figure was ever measured. The pipeline&#x27;s own first verdict was FAIL, so the correct claim is narrower: unverified claims are blocked from publication, shown by that verdict.</p></li></ul></section>
+<section class="sec"><p class="eyebrow">Links</p><div class="cta"><a class="btn" href="/evidence/multi-agent-operations/">Evidence</a></div><p class="note">No demo — the charters, the pipeline and the gate run inside a private operating environment, so there is nothing to open. The commands that produced every figure are published instead, on the record page.</p></section>
+<section class="sec"><p class="eyebrow">Authorship</p><div class="prose"><p>I am the architect and author of record; drafts were produced by agent tooling under my protocol and every sentence was approved by me before publication.</p></div></section><p class="approval">Author approval — 2026-08-23, hash 4ff473a2</p>
+</div></main>
+<footer><div class="wrap"><p class="auth">I am the architect and author of record; drafts were produced by agent tooling under my protocol and every sentence was approved by me before publication.</p>
+<p class="fmeta">@TheKingHippopotamus · <a href="mailto:hi@king-hippopotamus.com">hi@king-hippopotamus.com</a> · <a href="https://github.com/TheKingHippopotamus">GitHub</a></p>
+<p class="fmeta">Elsewhere: <a href="https://www.linkedin.com/in/nir-elmaliah-a9b1a429b/" rel="me noopener">LinkedIn</a> · <a href="https://x.com/LmlyhNyr" rel="me noopener">X</a> · <a href="https://github.com/TheKingHippopotamus" rel="me noopener">GitHub</a> · <a href="https://pypi.org/user/KingHippopotamus/" rel="me noopener">PyPI</a> · <a href="https://www.npmjs.com/~king_pm" rel="me noopener">npm</a> · <a href="https://www.youtube.com/channel/UCJNDkUKgzA4KlFz4NuYvhnw" rel="me noopener">YouTube</a></p>
+</div></footer>
+</body>
+</html>

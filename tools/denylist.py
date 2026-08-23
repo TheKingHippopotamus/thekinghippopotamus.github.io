@@ -97,11 +97,54 @@ CONTENT_LEGAL = [
     ("overclaim",         r"Nothing\s+leaves\s+your\s+device", False),
 ]
 
+# Disclosure policy (owner directive 2026-08-23, "the SOC2 model"): Category-3 items —
+# internal state with zero reader benefit — are publish-blocking on public pages.
+# Patterns are deliberately narrow: they catch the phrasings that actually appeared.
+DISCLOSURE = [
+    ("org-vs-reality",    r"\bdata[- ]office\b[^.]{0,80}\b(?:not\s+(?:currently\s+)?(?:operating|running)|designed,?\s+not)\b", False),
+    ("curation-internals",r"\b(?:curation\s+(?:arithmetic|log|run)|repositor(?:y|ies)\s+(?:left|made)\s+(?:public|private)\s+(?:visibility|outside))\b", False),
+    ("host-state",        r"\b(?:\d{1,3}\s?%\s+(?:used|full|of\s+disk)|disk\s+(?:usage|headroom)|RAM\s+headroom)\b", False),
+    ("stale-failure",     r"\b(?:not\s+shipped|none\s+pushed|are\s+not\s+shipped|remains?\s+the\s+newest\s+published)\b", False),
+    ("interiority",       r"\b(?:could\s+not\s+answer\s+a\s+plain\s+question|worse\s+than\s+I\s+expected|I\s+was\s+(?:wrong|embarrassed)|all\s+mine,\s+all\s+the\s+same\s+shape)\b", False),
+    ("spec-drift",        r"\b(?:objective[- ]count\s+drift|31/34/66)\b", False),
+]
+
+
+# Tone rules (site constitution, Part II "Four failure modes -> publish-gate law").
+# These are the words the four failure modes are made of: scale adjectives with no
+# artifact behind them, capability adjectives the reader is supposed to take on
+# faith, address-the-reader warmth, and the amateur tell.  They are PROSE-ONLY:
+# on an HTML page they are matched against the text a reader reads, with <pre>,
+# <code>, <table>, <script> and <style> blocks and all tags masked out first, so a
+# real recorded session or a spec table is never edited to satisfy a word list.
+TONE = [
+    ("scale-adjective",
+     r"\b(?:revolutionar(?:y|ily)|cutting[- ]edge|bleeding[- ]edge|enterprise[- ]grade|"
+     r"world[- ]class|state[- ]of[- ]the[- ]art|best[- ]in[- ]class|"
+     r"industry[- ]leading|next[- ]generation|game[- ]?chang(?:er|ing))\b", False),
+    ("capability-adjective",
+     r"\b(?:powerful|robust|seamless(?:ly)?|effortless(?:ly)?|blazing(?:ly)?[- ]fast|"
+     r"unparalleled|unmatched)\b", False),
+    ("sycophantic",
+     r"\b(?:passionate(?:ly)?|love\s+to|excited|thrilled|delighted|honou?red)\b", False),
+    ("coming-soon", r"\bcoming\s+soon\b", False),
+    # An exclamation mark in prose.  Never in markup (`<!doctype`, `<!--`) and never
+    # in code (`!=`, `!important`): the lookaround requires a word or closing
+    # character before it and forbids one after.
+    ("exclamation-in-prose", r"(?<=[A-Za-z0-9,)\]\"'\u2019])!(?![=\w-])", False),
+]
+
 CATEGORIES = {
     "topology": TOPOLOGY,
     "identity": IDENTITY,
     "content-legal": CONTENT_LEGAL,
+    "disclosure": DISCLOSURE,
+    "tone": TONE,
 }
+
+# Categories matched against reader-facing prose only (HTML: tags, <pre>, <code>,
+# <table>, <script> and <style> masked out first, offsets preserved).
+PROSE_ONLY_CATEGORIES = {"tone"}
 
 # Categories whose matched text is NEVER printed.
 REDACT_CATEGORIES = {"topology", "identity"}
@@ -181,6 +224,21 @@ def is_self(path: Path) -> bool:
     return SELF_EXCLUDE_MARKER in head
 
 
+_BLOCKS = re.compile(r"<(script|style|pre|code|table)\b[^>]*>.*?</\1>", re.S | re.I)
+_TAGS = re.compile(r"<[^>]+>", re.S)
+
+
+def mask_html(text: str) -> str:
+    """Blank out markup and artifact blocks, character for character.
+
+    Every removed character becomes a space and every newline is kept, so line
+    numbers and columns in the masked copy match the original file exactly.
+    """
+    def blank(m):
+        return "".join("\n" if c == "\n" else " " for c in m.group(0))
+    return _TAGS.sub(blank, _BLOCKS.sub(blank, text))
+
+
 def iter_files(root: Path):
     if root.is_file():
         yield root
@@ -212,11 +270,20 @@ def scan_path(root, overlay_path: str | None = None,
             text = f.read_text(encoding="utf-8")
         except (UnicodeDecodeError, OSError):
             continue
-        for lineno, line in enumerate(text.splitlines(), start=1):
+        raw_lines = text.splitlines()
+        if f.suffix.lower() in (".html", ".htm"):
+            prose_lines = mask_html(text).splitlines()
+            if len(prose_lines) != len(raw_lines):   # never expected; fail safe
+                prose_lines = raw_lines
+        else:
+            prose_lines = raw_lines
+        for lineno, line in enumerate(raw_lines, start=1):
+            pline = prose_lines[lineno - 1]
             if len(line) > 8000:
                 line = line[:8000]
+                pline = pline[:8000]
             for cat, name, rx in rules:
-                m = rx.search(line)
+                m = rx.search(pline if cat in PROSE_ONLY_CATEGORIES else line)
                 if not m:
                     continue
                 raw = m.group(0)

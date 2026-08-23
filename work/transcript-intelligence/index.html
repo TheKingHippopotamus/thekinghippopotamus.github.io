@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="index, follow">
+<meta name="description" content="A searchable corpus of earnings calls, held to a retrieval gate that refuses a change unless two named metrics both improve.">
+<title>Transcript intelligence — King Hippopotamus</title>
+<link rel="canonical" href="https://thekinghippopotamus.github.io/work/transcript-intelligence/">
+<style>:root{color-scheme:dark light;--ink:#0B0E13;--raise:#12161E;--raise2:#1A1F2B;--sunk:#090C11;--rule:#262D3D;--rule2:#333C50;--t1:#F2EDE8;--t2:#9B9589;--t3:#6B665C;--gold:#C9A227;--gold2:#E0B830;--ok:#3D9B6E;--warn:#C4A235;--bad:#C4503A;--display:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;--sans:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;--mono:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace}@media (prefers-color-scheme:light){:root{--ink:#ECEEEB;--raise:#F8F9F7;--raise2:#FFFFFF;--sunk:#E2E5E1;--rule:#CDD2CC;--rule2:#A7AFA6;--t1:#10151B;--t2:#4C555E;--t3:#6F7880;--gold:#8A6B10;--gold2:#6E5409;--ok:#2E7A55;--warn:#7A5F0E;--bad:#A83A24}}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--t1);font:16.5px/1.65 var(--sans);
+-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:0 26px}
+.wide{max-width:1040px}
+a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:3px}
+a:hover{text-decoration-color:currentColor}
+a:focus-visible{outline:2px solid var(--gold2);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.02em}
+p{margin:0 0 15px}
+code{font:.9em var(--mono)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:14px;top:14px;background:var(--raise);padding:9px 14px;z-index:9}
+.mast{border-bottom:1px solid var(--rule)}
+.mast .wrap{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:baseline;
+justify-content:space-between;padding-top:18px;padding-bottom:16px}
+.mark{font:600 14px/1.4 var(--sans);letter-spacing:.02em;text-decoration:none}
+.mast nav ul{display:flex;flex-wrap:wrap;gap:9px 20px;list-style:none;margin:0;padding:0;
+font:11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.mast nav a{text-decoration-color:transparent}
+.mast nav a:hover,.mast nav a[aria-current=page]{text-decoration-color:currentColor}
+main{padding-top:clamp(38px,7vw,80px)}
+h1{font-size:clamp(40px,6vw,72px);line-height:1.02;margin:0}
+h2{font-size:26px;margin:0 0 12px}h3{font-size:18px;margin:26px 0 8px}
+.thesis{font:clamp(19px,2.2vw,25px)/1.42 var(--display);letter-spacing:-.015em;
+margin:28px 0 0;max-width:46ch}
+.thesis2{margin:20px 0 0;color:var(--t2);font-size:16.5px;line-height:1.72;max-width:60ch}
+.roles{display:flex;flex-wrap:wrap;gap:12px 0;margin:32px 0 0;padding:0;list-style:none;
+font:11.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--t2)}
+.roles li{padding:0 16px;border-left:1px solid var(--rule2)}
+.roles li:first-child{padding-left:0;border-left:0}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin:34px 0 0}
+.btn{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;
+text-transform:uppercase;padding:14px 22px;border:1px solid var(--rule2);
+text-decoration:none;transition:border-color .15s ease,background-color .15s ease}
+.btn:hover{border-color:var(--t2);background:var(--raise)}
+.btn-p{border-color:var(--t1)}
+.avail{margin:22px 0 0;font:12px/1.6 var(--mono);letter-spacing:.05em;color:var(--t3)}
+.sec{margin:clamp(52px,8vw,86px) 0 0}
+.sub{margin:clamp(34px,5vw,52px) 0 0}
+.eyebrow{display:flex;align-items:center;gap:12px;font:11px/1 var(--mono);
+letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+.eyebrow::before{content:"";width:26px;height:1px;background:currentColor;flex:0 0 auto}
+.sec-note{margin:0 0 22px;color:var(--t2);font-size:15px;max-width:66ch}
+.grid{display:grid;gap:1px}
+.grid>*{box-shadow:0 0 0 1px var(--rule)}
+.pkgs{grid-template-columns:1fr}
+.cell{background:var(--raise);padding:20px 20px 18px}
+.cmd{display:block;font:13.5px/1.5 var(--mono);color:var(--t1);overflow-wrap:anywhere}
+.cmd::before{content:"$ ";color:var(--t3)}
+.pkg-meta{margin:15px 0 0;font:10.5px/1 var(--mono);letter-spacing:.13em;
+text-transform:uppercase;color:var(--t3);display:flex;flex-wrap:wrap;gap:9px;
+align-items:baseline}
+.ver{font-size:16px;letter-spacing:0;color:var(--gold);font-variant-numeric:tabular-nums}
+.pkg-cli{margin:11px 0 0;font:12px/1.5 var(--mono);color:var(--t2)}
+.pkg-more{margin:13px 0 0;font:10.5px/1 var(--mono);letter-spacing:.14em;
+text-transform:uppercase}
+.cards{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--raise);padding:26px 24px 22px;text-decoration:none;display:block;
+transition:background-color .15s ease}
+.card:hover{background:var(--raise2)}
+.card:hover .card-t{text-decoration-color:currentColor}
+.card-dom{display:block;font:10.5px/1 var(--mono);letter-spacing:.18em;
+text-transform:uppercase;color:var(--t3);margin:0 0 15px}
+.card-t{display:block;font:clamp(22px,2.4vw,28px)/1.2 var(--display);letter-spacing:-.02em;
+text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:5px}
+.card-h{display:block;margin:12px 0 0;color:var(--t2);font-size:15px;line-height:1.6;
+max-width:52ch}
+.card-foot{display:flex;align-items:flex-end;gap:16px;margin:26px 0 0;padding:16px 0 0;
+border-top:1px solid var(--rule)}
+.big{font:400 clamp(30px,4vw,48px)/.88 var(--display);color:var(--gold);
+font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.big-lab{font:10.5px/1.35 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+color:var(--t3);max-width:22ch;padding-bottom:3px}
+.card-f{grid-column:1/-1}
+.card-f .card-h{max-width:64ch}
+.soon{color:var(--t2);display:flex;flex-direction:column;justify-content:center}
+.soon .card-dom{color:var(--t3)}
+.soon p{font-size:15px;line-height:1.6;margin:0;max-width:44ch}
+.caps{grid-template-columns:repeat(3,1fr)}
+.cap{background:var(--raise);padding:26px 24px 22px;display:flex;flex-direction:column}
+.cap-t{font:clamp(19px,2vw,23px)/1.25 var(--display);letter-spacing:-.02em;margin:0 0 13px}
+.cap-b{color:var(--t2);font-size:14.5px;line-height:1.65;margin:0;flex:1 1 auto}
+.how{grid-template-columns:repeat(3,1fr)}
+.how .cell{padding:24px 22px 22px}
+.how-l{font:10.5px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 15px}
+.how-t{font:17px/1.55 var(--display);margin:0;color:var(--t1)}
+.ledger{grid-template-columns:repeat(4,1fr);margin:26px 0 0}
+.ledger .cell{padding:18px 18px 16px}
+.led-v{font:22px/1.1 var(--mono);letter-spacing:-.02em;color:var(--t1);margin:0;
+font-variant-numeric:tabular-nums}
+.led-l{font:10px/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+color:var(--t3);margin:10px 0 0}
+@media (max-width:620px){.ledger{grid-template-columns:repeat(2,1fr)}}
+.plain{list-style:none;margin:0;padding:0}
+.plain li{padding:13px 0;border-bottom:1px solid var(--rule)}
+.plain li:last-child{border-bottom:0}
+.plain li>p:last-child{margin-bottom:0}
+.kicker{font:11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 20px}
+.lede{font:clamp(20px,2.7vw,29px)/1.35 var(--display);letter-spacing:-.02em;
+margin:24px 0 0;max-width:34ch}
+.lede-w{max-width:46ch}
+.prose p{max-width:68ch;line-height:1.75;margin:0 0 20px}
+.prose>:last-child{margin-bottom:0}
+.artifact{background:var(--raise);border:1px solid var(--rule);
+border-top:2px solid var(--gold);padding:22px 22px 20px;margin:22px 0}
+.artifact>.eyebrow{margin-bottom:18px}
+.artifact>:last-child{margin-bottom:0}
+.dec{list-style:none;counter-reset:d;margin:0;padding:0;display:grid;gap:1px}
+.dec li{box-shadow:0 0 0 1px var(--rule)}
+.dec li{counter-increment:d;background:var(--raise);padding:20px 22px 18px}
+.dec li::before{content:counter(d,decimal-leading-zero);display:block;
+font:11px/1 var(--mono);letter-spacing:.16em;color:var(--t3);margin:0 0 13px}
+.dec p{max-width:64ch;line-height:1.7}
+.dec p:last-child{margin-bottom:0}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font:10.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+color:var(--t3);padding:0 14px 10px 0;border-bottom:1px solid var(--rule2);white-space:nowrap}
+td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule);vertical-align:top;
+font:13px/1.6 var(--mono)}
+tr:last-child td{border-bottom:0}
+.spec td:first-child{color:var(--t3);width:36%}
+.pill{display:inline-block;font:10px/1.5 var(--mono);letter-spacing:.1em;
+text-transform:uppercase;padding:2px 9px;border:1px solid currentColor;border-radius:999px;
+white-space:nowrap}
+.p-ok{color:var(--ok)}.p-no{color:var(--bad)}.p-na{color:var(--warn)}
+.note{color:var(--t2);font-size:14.5px}
+.dia{color:var(--t2);margin:0;overflow-x:auto}
+.dia svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure{margin:24px 0}
+figcaption{font:11px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+color:var(--t3);margin:0 0 11px}
+pre{background:var(--sunk);border:1px solid var(--rule);border-left:2px solid var(--rule2);
+padding:17px 19px;margin:0;overflow-x:auto;font:12.5px/1.7 var(--mono);
+white-space:pre-wrap;overflow-wrap:break-word}
+.term{max-height:min(66vh,620px);overflow:auto;white-space:pre;color:var(--t2);
+line-height:1.75;border-left-color:var(--rule)}
+.term i{color:var(--t1);font-style:normal}
+.term-note{margin:0 0 16px;color:var(--t2);font-size:14.5px;max-width:66ch}
+.pending{border-left:2px solid var(--warn);padding:3px 0 3px 17px;color:var(--t2);
+font-size:14.5px;margin:0;max-width:68ch}
+.tldr ul,ul.tldr{list-style:none;padding:0;margin:0;display:grid;gap:8px}ul.tldr li{padding:10px 14px;border:1px solid var(--rule);border-radius:2px;font-family:var(--sans);font-size:15px;line-height:1.5}ul.tldr li::before{content:'— ';color:var(--gold)}
+.draft{border-left:2px solid var(--warn);padding:3px 0 3px 17px;color:var(--t2);
+font-size:14.5px;margin:26px 0 0;max-width:64ch}
+.held{margin:0 0 40px}
+.approval{margin:clamp(46px,7vw,72px) 0 0;padding:14px 0 0;border-top:1px solid var(--rule);
+font:10.5px/1.7 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
+.plist{grid-template-columns:repeat(2,1fr)}
+.pc{background:var(--raise);padding:24px 24px 20px;text-decoration:none;display:flex;
+flex-direction:column;transition:background-color .15s ease}
+.pc:hover{background:var(--raise2)}
+.pc:hover .pc-n{text-decoration-color:currentColor}
+.pc-k{font:10.5px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;
+color:var(--t3);margin:0 0 14px}
+.pc-n{font:clamp(21px,2.2vw,26px)/1.15 var(--display);letter-spacing:-.02em;margin:0;
+text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:5px}
+.pc-o{margin:11px 0 0;color:var(--t2);font-size:14.5px;line-height:1.6;flex:1 1 auto}
+.pc-f{margin:20px 0 0;padding:15px 0 0;border-top:1px solid var(--rule);
+font:12.5px/1.5 var(--mono);color:var(--t1);overflow-wrap:anywhere}
+.pc-f::before{content:"$ ";color:var(--t3)}
+.pc-v{margin:9px 0 0;font:10.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;
+color:var(--t3)}
+.plist>:last-child:nth-child(odd){grid-column:span 2}
+.plist>:last-child:nth-child(odd) .pc-o,
+.plist>:last-child:nth-child(odd) .pc-n{max-width:56ch}
+.facts{grid-template-columns:repeat(5,1fr);margin:34px 0 0}
+.facts .cell{padding:17px 16px 15px}
+.fact-v{margin:0;font:19px/1.15 var(--mono);color:var(--t1);font-variant-numeric:tabular-nums;
+overflow-wrap:anywhere}
+.fact-l{margin:9px 0 0;font:10px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+color:var(--t3)}
+.phead{font:11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--t3);
+margin:0 0 18px}
+.install{margin:30px 0 0;background:var(--sunk);border:1px solid var(--rule2);
+padding:16px 18px;font:14px/1.5 var(--mono);color:var(--t1);overflow-wrap:anywhere}
+.install::before{content:"$ ";color:var(--t3)}
+.lay{margin:clamp(34px,5vw,50px) 0 0}
+.lay-h{border-bottom:1px solid var(--rule2);padding:0 0 13px;margin:0 0 20px}
+.lay-t{font:10.5px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 9px}
+.lay-n{font:21px/1.2 var(--display);letter-spacing:-.02em;margin:0}
+.lay-s{margin:9px 0 0;color:var(--t2);font-size:14.5px;max-width:66ch}
+.feat{grid-template-columns:repeat(2,1fr)}
+.ft{background:var(--raise);padding:22px 22px 20px;display:flex;flex-direction:column}
+.ft-b{align-self:flex-start;font:10px/1.5 var(--mono);letter-spacing:.14em;
+text-transform:uppercase;color:var(--t3);border:1px solid var(--rule2);border-radius:999px;
+padding:2px 10px;margin:0 0 15px}
+.ft-t{font:17px/1.35 var(--display);letter-spacing:-.01em;margin:0 0 10px}
+.ft-b2{margin:0 0 16px;color:var(--t2);font-size:14.5px;line-height:1.65;flex:1 1 auto}
+.ft pre{font-size:11.5px;line-height:1.7;padding:13px 15px;white-space:pre;overflow-x:auto}
+.feat>:last-child:nth-child(odd){grid-column:span 2}
+.feat>:last-child:nth-child(odd) .ft-t,
+.feat>:last-child:nth-child(odd) .ft-b2{max-width:58ch}
+.stations{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:1px}
+.stations>li{counter-increment:s;background:var(--raise);box-shadow:0 0 0 1px var(--rule);
+padding:22px 24px 20px;display:grid;grid-template-columns:52px 1fr;gap:0 18px}
+.st-n{font:11px/1.7 var(--mono);letter-spacing:.16em;color:var(--t3)}
+.st-n::before{content:counter(s,decimal-leading-zero)}
+.st-t{font:20px/1.25 var(--display);letter-spacing:-.02em;margin:0 0 10px}
+.st-x{margin:0;font-size:15px;line-height:1.7;color:var(--t1);max-width:62ch}
+.st-a{margin:15px 0 0;padding:12px 0 0;border-top:1px solid var(--rule);
+font:12px/1.7 var(--mono);color:var(--t2);max-width:72ch}
+.st-a b{font-weight:400;letter-spacing:.14em;text-transform:uppercase;font-size:10px;
+color:var(--t3)}
+.deck{grid-template-columns:repeat(2,1fr)}
+.dk{background:var(--raise);padding:22px 22px 20px}
+.dk-l{margin:0 0 13px;font:10.5px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3)}
+.dk-t{margin:0;font-size:14.5px;line-height:1.7;color:var(--t1)}
+.lab{list-style:none;margin:0;padding:0;display:grid;gap:1px}
+.lab>li{background:var(--raise);box-shadow:0 0 0 1px var(--rule);padding:22px 24px 20px;
+display:grid;grid-template-columns:132px 1fr;gap:4px 22px}
+.lab-d{font:12px/1.7 var(--mono);color:var(--t2);font-variant-numeric:tabular-nums}
+.lab-t{font:20px/1.25 var(--display);letter-spacing:-.02em;margin:0}
+.lab-f{margin:15px 0 0;font:12.5px/1.75 var(--mono);color:var(--t2);max-width:76ch}
+.lab-f b{display:block;margin:0 0 4px;font-weight:400;font-size:10px;letter-spacing:.16em;
+text-transform:uppercase;color:var(--t3)}
+.lab-s{margin:10px 0 0}
+footer{margin-top:clamp(70px,10vw,116px);border-top:1px solid var(--rule);padding:26px 0 60px}
+.auth{margin:0;font-size:13.5px;line-height:1.7;color:var(--t2);max-width:72ch}
+.fmeta{margin:16px 0 0;font:10.5px/1.9 var(--mono);letter-spacing:.13em;
+text-transform:uppercase;color:var(--t3)}
+@media (min-width:600px){.pkgs{grid-template-columns:repeat(2,1fr)}
+.pkgs>:last-child{grid-column:span 2}}
+@media (min-width:900px){.pkgs{grid-template-columns:repeat(3,1fr)}
+.pkgs>:last-child{grid-column:auto}}
+@media (max-width:900px){.caps{grid-template-columns:1fr}.facts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:820px){.cards,.how,.plist,.feat,.deck{grid-template-columns:1fr}
+.card-f{grid-column:auto}}
+@media (max-width:640px){.roles{flex-direction:column;align-items:flex-start;gap:9px}
+.roles li{border-left:0;padding:0}
+.stations>li,.lab>li{grid-template-columns:1fr;gap:10px}
+.st-n{letter-spacing:.2em}}
+@media (max-width:560px){main{padding-top:34px}.mast nav ul{gap:8px 14px}
+.thesis{max-width:none}.facts{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+:root[data-scheme=dark]{--ink:#0B0E13;--raise:#12161E;--raise2:#1A1F2B;--sunk:#090C11;--rule:#262D3D;--rule2:#333C50;--t1:#F2EDE8;--t2:#9B9589;--t3:#6B665C;--gold:#C9A227;--gold2:#E0B830;--ok:#3D9B6E;--warn:#C4A235;--bad:#C4503A}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast"><div class="wrap">
+<a class="mark" href="/">King Hippopotamus</a>
+<nav aria-label="Primary"><ul><li><a href="/">Home</a></li><li><a href="/work/" aria-current="page">Work</a></li><li><a href="/products/">Products</a></li><li><a href="/method/">Method</a></li><li><a href="/lab/">Lab</a></li><li><a href="/about/">About</a></li><li><a href="/hire/">Hire</a></li></ul></nav>
+</div></header>
+<main id="main"><div class="wrap">
+<p class="kicker">Case study</p>
+<h1>Transcript intelligence</h1>
+<p class="lede">A searchable corpus of earnings calls, held to a retrieval gate that refuses a change unless two named metrics both improve.</p>
+<section class="sec"><p class="eyebrow">Context</p><div class="prose"><p>This is a domain deep-dive, not a step in the spine. The estate&#x27;s method — a gate that counts rows rather than files, a written record of what failed, numbers produced by code instead of asserted by prose — was built against filings and prices. Those arrive structured, with their own identifiers and their own idea of what quarter they belong to.</p>
+<p>Earnings-call transcripts are none of that. Free text from two providers, no shared key between them, dates the provider itself often does not know, and no correct answer to compare a search result against. So this study sits beside the <a href="/work/data-acquisition/">acquisition work</a> rather than after it, and asks one question: does the method transfer to unstructured text?</p>
+<p>What it was applied to is 12,171 calls across 3,652 tickers, deduplicated in two passes. Two results carry the page. A retrieval gate written in advance refused the change it was built to judge. And a one-line date fallback produced not errors but confident wrong answers — the harder class to find, because nothing in the interface looks broken.</p></div></section>
+<section class="sec"><p class="eyebrow">What I built</p><div class="prose"><p>The promotion rule was fixed before any numbers existed: a challenger index must beat the incumbent on nDCG@10 <strong>and</strong> hit@5-strong. In round one the challenger lost the first metric — 0.575 against 0.607 — while winning the second outright. The gate refused the promotion: the verdict recorded was STOP, change nothing live, with a list of what was not touched.</p>
+<p>The write-up then examined the measurement rather than the threshold. The challenger was surfacing 92 to 101 ungraded hits per 300 against the incumbent&#x27;s 26 at its winning setting, and the harness scores an ungraded hit as zero — the challenger was being charged for results the incumbent had never retrieved. I graded the 111 missing items against each query&#x27;s written intent, re-ran the identical gate — 0.606 to 0.701, zero unjudged on both sides — and published the one category that regressed.</p>
+<p>The second problem is smaller and harder to see. One line resolved a call&#x27;s date to whichever candidate was non-null. One provider leaves that field blank on 36.4% of its documents, so hundreds of calls inherited the day their transcript page was posted instead. The join to the earnings feed then did not fail — it succeeded against the wrong quarter, displaying a price reaction that belonged to an unrelated one. The repair is a four-tier resolution chain that records which tier resolved every row, under a rule that decides the hard cases: leave the date NULL rather than stamp a known-wrong one.</p></div>
+<div class="artifact"><p class="eyebrow">Six stages, and the gate that governs the fourth — both rounds, verdicts intact</p>
+<div class="dia"><svg viewBox="0 0 920 390" width="100%" role="img" aria-label="Six-stage transcript pipeline with the retrieval evaluation gate expanded into its two rounds"><g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" fill="none" stroke="currentColor" stroke-width="1">
+<rect x="8" y="28" width="136" height="54"/><rect x="160" y="28" width="136" height="54"/><rect x="312" y="28" width="136" height="54"/><rect x="464" y="28" width="136" height="54"/><rect x="616" y="28" width="136" height="54" stroke="var(--gold)"/><rect x="768" y="28" width="136" height="54"/>
+<path d="M144 55h9M296 55h9M448 55h9M600 55h9M752 55h9"/>
+<g fill="currentColor" stroke="none"><path d="M153 52l7 3-7 3z"/><path d="M305 52l7 3-7 3z"/><path d="M457 52l7 3-7 3z"/><path d="M609 52l7 3-7 3z"/><path d="M761 52l7 3-7 3z"/></g>
+<g stroke="none" text-anchor="middle" fill="currentColor" font-size="12"><text x="76" y="50">Collect</text><text x="228" y="50">Normalise</text><text x="380" y="50">Identity</text><text x="532" y="50">Index</text><text x="684" y="50" fill="var(--gold)">Eval gate</text><text x="836" y="50">Ledgers</text></g>
+<g stroke="none" text-anchor="middle" fill="var(--t2)" font-size="9"><text x="76" y="67">two providers | read-only</text><text x="228" y="67">Q&amp;A pairs | speakers | tone</text><text x="380" y="67">call date | four tiers</text><text x="532" y="67">keyword | vector | IDF</text><text x="684" y="67">30 queries | graded pool</text><text x="836" y="67">guidance | tone | reaction</text></g>
+<path d="M684 82v22h-499v28" stroke="var(--t2)" stroke-dasharray="3 3"/><path d="M182 134l3 6 3-6z" fill="var(--t2)" stroke="none"/>
+<rect x="20" y="140" width="330" height="190"/><rect x="570" y="140" width="330" height="190"/>
+<path d="M355 238h122"/><path d="M477 235l7 3-7 3z" fill="currentColor" stroke="none"/>
+<g stroke="none" text-anchor="middle" fill="var(--t2)" font-size="9"><text x="462" y="224">grade the 111 unjudged items</text><text x="462" y="258">fix the measurement,</text><text x="462" y="270">not the threshold</text></g>
+<g stroke="none" fill="var(--t2)" font-size="9.5"><text x="40" y="164">ROUND 1 — promotion attempt</text><text x="590" y="164">ROUND 2 — same gate, unchanged</text></g>
+<g stroke="none" fill="currentColor" font-size="10.5"><text x="40" y="190">nDCG@10       0.575  vs  0.607</text><text x="40" y="210">hit@5-strong  0.867  vs  0.800</text><text x="40" y="230">MRR@10        0.717  vs  0.614</text><text x="40" y="250">unjudged@10   92-101   vs   26</text><text x="590" y="190">nDCG@10       0.606  to  0.701</text><text x="590" y="210">hit@5-strong  0.867  to  0.900</text><text x="590" y="230">P@5 one-plus  0.813  to  0.900</text><text x="590" y="250">unjudged@10       0   and    0</text></g>
+<path d="M40 268h290M590 268h290" stroke="var(--t2)"/>
+<g stroke="none" font-size="11.5" fill="var(--gold)"><text x="40" y="292">FAILED — change nothing live</text><text x="590" y="292">PROMOTED</text></g>
+<g stroke="none" font-size="9" fill="var(--t2)"><text x="40" y="312">the rule required both metrics</text><text x="590" y="312">macro_chain 0.657 to 0.621 — regressed, published</text></g>
+<text x="462" y="362" stroke="none" text-anchor="middle" fill="var(--t2)" font-size="9">Grades are keyed on stable question-and-answer identity, not on rank, so every judgment survives the next backend.</text>
+</g></svg></div>
+</div>
+<figure><figcaption>The date-resolution chain, before and after — and the repair that was rejected</figcaption><pre># before -- one expression, three fallbacks, no provenance
+date = call_date or published_at[:10] or url_date
+#   one provider leaves call_date blank on 3,500 of 9,603 documents
+#   -&gt; the transcript PAGE date became the CALL date
+#   -&gt; 179 calls joined to the wrong quarter&#x27;s price reaction
+
+# after -- four tiers, and every row records which one resolved it
+#   1  explicit provider call date .............. 5,925   48.7%
+#   2  fiscal period matched to a report date ... 5,649   46.4%
+#   3  page date, only within a plausible lag ...   291    2.4%
+#   4  left NULL by design ......................   306    2.5%
+#
+# tier 2 is the one that matters: matching by fiscal period rather
+# than by proximity means the repair never consults the value it
+# does not trust.  And the rejected repair is written down too --
+# widening the join window makes wrong joins MORE likely, not fewer.</pre></figure>
+</section>
+<section class="sec"><p class="eyebrow">Decisions</p><ul class="dec"><li><p>Chose to grade the 111 unjudged results over relaxing the two-metric promotion rule, because round one&#x27;s loss was an artifact of the evaluation and not of the index: the challenger surfaced 92 to 101 ungraded hits per 300 against 26 at the setting the incumbent won with, and an ungraded hit scores zero. Loosening the threshold would have shipped the same change on a weaker measurement; closing the grading gap and re-running the unchanged gate produced 0.701 against 0.606.</p></li><li><p>Chose to leave a call&#x27;s date NULL over stamping the transcript page&#x27;s publication date, because a blank cell degrades visibly and a wrong date degrades invisibly — 179 calls had already joined to the wrong quarter&#x27;s price reaction with no signal anywhere in the interface. The obvious repair, widening the plus-or-minus-three-day join window, was named and rejected in the same document: it makes wrong joins more likely, not fewer.</p></li><li><p>Chose deterministic code over model-written numbers because every figure in the product has to be re-derivable from SQL. Language models are used at the edge only, to read and to draft prose, and a quote-anchoring step normalises each claim against the sentence set of the actual source material and drops the claims that do not anchor. 43 memos exist under that rule, and the analyst role is given no tools.</p></li></ul></section>
+<section class="sec"><p class="eyebrow">Evidence</p><div class="artifact"><p class="eyebrow">Research artifact · evidence ledger</p>
+<div class="tw"><table><thead><tr><th>Claim</th><th>How it was checked</th><th>Status</th></tr></thead><tbody><tr><td>The corpus is 12,171 deduplicated calls across 3,652 tickers, spanning 2021-03-10 to 2026-08-21 — 9,376 from the archive provider and 2,795 from the live provider.</td><td>sqlite3 &#x27;file:&lt;derived&gt;?mode=ro&#x27; &quot;SELECT COUNT(*) FROM calls&quot; -&gt; 12,171 ; &quot;SELECT COUNT(DISTINCT ticker) FROM calls&quot; -&gt; 3,652 ; &quot;SELECT MIN(call_date), MAX(call_date) FROM calls&quot; -&gt; 2021-03-10 | 2026-08-21 ; &quot;SELECT source_db, COUNT(*) FROM calls GROUP BY source_db&quot; -&gt; 9,376 | 2,795</td><td><span class="pill p-ok">published</span></td></tr><tr><td>12,712 raw captures became 12,171 calls: 541 rows (4.3%) removed by two deduplication passes. The live provider loses 153 of its own rows not to the archive but to a fuller sibling capture in its own store — the second pass keeps the capture with the most speaker turns, and it is source-blind.</td><td>COUNT(*) on the documents table of each upstream store -&gt; 9,764 + 2,948 = 12,712 ; 12,712 - 12,171 = 541. Pass 1 drops an archive capture colliding with a live capture on (ticker, fiscal quarter, fiscal year, call date); pass 2 keeps the fullest capture within a (ticker, fiscal quarter, fiscal year) group.</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The corpus is concentrated in 2024 to 2026, with a thin 2021 tail and no 2022 to 2023 coverage at all: 2 calls in 2021, 780 in 2024, 3,310 in 2025 and 7,773 in 2026.</td><td>sqlite3 &#x27;file:&lt;derived&gt;?mode=ro&#x27; &quot;SELECT substr(call_date,1,4), COUNT(*) FROM calls WHERE call_date&lt;&gt;&#x27;&#x27; GROUP BY 1 ORDER BY 1&quot; -&gt; 2021:2 | 2024:780 | 2025:3,310 | 2026:7,773. The 2022 and 2023 buckets are absent, not zero-filled.</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The derived read model holds 146,579 question-and-answer pairs, 128,976 speaker rows with 1,878 analyst firms parsed out of free-text role labels, 35,825 linguistic-vitals rows and 230,925 extracted guidance sentences. The measured non-answer rate across all pairs is 6.54%.</td><td>COUNT(*) per table on &lt;derived&gt; opened mode=ro -&gt; qa_pairs 146,579 | speakers 128,976 | vitals 35,825 | guidance_sents 230,925 | memos 43 ; &quot;SELECT COUNT(DISTINCT firm) FROM qa_pairs WHERE firm&lt;&gt;&#x27;&#x27;&quot; -&gt; 1,878 ; &quot;SELECT ROUND(100.0*SUM(non_answer)/COUNT(*),2) FROM qa_pairs&quot; -&gt; 6.54</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The round-one loss was diagnosed as a bias in the evaluation, not a defect in the index: the candidate surfaced 92 to 101 top-10 hits per 300 that had never been graded, against 26 at the setting the incumbent won with, and the harness scores an ungraded hit as zero. All 111 ungraded items across the four gated configurations were then graded against each query&#x27;s written intent — distribution 20 zeros, 54 ones, 37 twos, 33% top grade, checked against the earlier passes for leniency drift.</td><td>the ungraded-hit ledger the runner writes on every evaluation ; judgment pool grew 695 -&gt; 806 with the prior state kept — three retained snapshots of the pool read 300, 454 and 695 grades, and the pool stands at 897 today.</td><td><span class="pill p-ok">published</span></td></tr><tr><td>Re-running the identical gate with zero unjudged hits on both sides promoted the candidate: nDCG@10 0.606 to 0.701 (+15.7% relative), P@5 with at least one relevant result 0.813 to 0.900, hit@5-strong 0.867 to 0.900, MRR@10 0.629 to 0.773. Warm query latency measured 0.52 to 0.92 s at the development flip and 0.56 to 0.92 s after the container deploy, against a 2 s bar.</td><td>same runner, same 30 queries, same two-metric rule, judgment pool at 806 ; unjudged@10 = 0 for both arms. Latency from the two flip verifications: three mandated queries re-run at the development flip (0.52 to 0.92 s) and again after the container deploy (0.56 to 0.92 s), the post-deploy result sets byte-identical to the development ones.</td><td><span class="pill p-ok">published</span></td></tr><tr><td>One of the six query categories regressed under the promoted backend and was published as such rather than averaged into the headline: macro_chain fell 0.657 to 0.621. The five gaining categories moved as the earlier failure analysis had predicted, the largest being incident_impact at 0.682 to 0.892.</td><td>per-category nDCG@10 table from the round-two evaluation run. The write-up also records 0.701 as a floor rather than a ceiling, because the fusion parameters beyond one knob were tuned against the previous backend&#x27;s score distribution and never retuned.</td><td><span class="pill p-ok">published</span></td></tr><tr><td>A one-line date fallback corrupted at least 330 calls, and the damage was split by failure mode rather than reported as a total: 179 joined to a real earnings surprise and price reaction from an unrelated quarter with no signal in the interface, 150 joined to nothing and rendered blank, 1 had no ticker in the outcome feed. The archive provider leaves the call date NULL on 3,500 of 9,603 documents (36.4%).</td><td>the integrity investigation of 2026-08-03, run read-only against production data (the archive store held 9,603 documents at that date): a fiscal quarter-and-year cross-check with a 150-day plausibility cutoff, quantified explicitly as a floor and not a total, with ten worked examples and every downstream consumer of the join traced (three call sites plus the feed sort and the company timeline). The 3,500-of-9,603 NULL rate is recorded in that investigation rather than produced by a standing command.</td><td><span class="pill p-ok">published</span></td></tr><tr><td>After the four-tier repair every call records which tier resolved its date: 5,925 (48.7%) from an explicit provider call date, 5,649 (46.4%) matched by fiscal period to a report date in the outcome feed, 291 (2.4%) from a page date within a plausible reporting lag, and 306 (2.5%) left NULL by design.</td><td>sqlite3 &#x27;file:&lt;derived&gt;?mode=ro&#x27; &quot;SELECT date_src, COUNT(*) FROM calls GROUP BY date_src&quot; -&gt; 5,925 | 5,649 | 291 | 306. The 306 NULLs are the rule working as specified, not a gap.</td><td><span class="pill p-ok">published</span></td></tr></tbody></table></div><p class="note standing">12 claims tested · 9 published · 3 withdrawn before publication. Full evidence record available on request — <a href="mailto:hi@king-hippopotamus.com">hi@king-hippopotamus.com</a>.</p>
+</div><p class="note"><a href="/evidence/transcript-intelligence/">Published claims and the verification policy →</a></p></section>
+<section class="sec"><p class="eyebrow">Limitations</p><ul class="plain"><li><p>Nothing here predicts returns. The corpus is joined to a one-day price reaction so that a measure can be falsified later; the backtest and the lookahead-bias guard are described in the plan and are not demonstrated. No measured predictive performance exists yet.</p></li><li><p>The retrieval numbers are a relative comparison under a fixed rule, not a benchmark score. nDCG@10 = 0.701 is measured on 30 queries against the 806-grade pool as it stood at that run — 897 grades today — judged by a single grader on a stated bar; the write-up flags single-judge bias as an unresolved caveat, and the figure is recorded as a floor because the fusion parameters were never retuned against the new backend. It is not comparable to anyone else&#x27;s published number.</p></li><li><p>The corpus is not complete and is not evenly deep. 12,171 calls over 3,652 tickers, of which 7,773 are 2026 and 2 are 2021, with no 2022 or 2023 coverage at all; an individual company may be one quarter deep. Vector and exact-match search are built from one provider&#x27;s identifier space and do not yet see the live provider&#x27;s calls — keyword and speaker lookups span both.</p></li><li><p>The date problem is contained, not closed. 330 was stated as a floor: rows with a missing fiscal period, and rows whose gap was smaller but still wrong, were never fully cleared, and no post-fix re-check of that residual population exists. The standing suite is 11 PASS / 7 WARN / 0 FAIL — zero failures is the correct claim, and the seven warnings, including 64 duplicate (ticker, call date) groups, are open documented items rather than clean ones.</p></li><li><p>Several wedges are one layer deep. Of 230,925 extracted guidance sentences only 9,889 carry a directional verdict, and the link from a guidance tuple to its eventual actual is unbuilt. Only 8,486 of 35,825 vitals rows carry a z-score, because that requires prior quarters for that specific company — so the change-beats-level signal is available on roughly a quarter of the measured scopes. Two of three designed model roles run; 43 memos is a working feature, not a body of research.</p></li></ul></section>
+<section class="sec"><p class="eyebrow">Links</p><div class="cta"><a class="btn" href="/evidence/transcript-intelligence/">Evidence</a></div><p class="note">No demo — The estate is a private operating environment: there is no public endpoint and no repository behind this page. The transcript text itself is licensed third-party material and is never published — only counts and derived aggregates. The read-only commands that produced every figure are printed on the linked record instead.</p></section>
+<section class="sec"><p class="eyebrow">Authorship</p><div class="prose"><p>I am the architect and author of record; drafts were produced by agent tooling under my protocol and every sentence was approved by me before publication.</p></div></section><p class="approval">Author approval — 2026-08-23, hash 926a2097</p>
+</div></main>
+<footer><div class="wrap"><p class="auth">I am the architect and author of record; drafts were produced by agent tooling under my protocol and every sentence was approved by me before publication.</p>
+<p class="fmeta">@TheKingHippopotamus · <a href="mailto:hi@king-hippopotamus.com">hi@king-hippopotamus.com</a> · <a href="https://github.com/TheKingHippopotamus">GitHub</a></p>
+<p class="fmeta">Elsewhere: <a href="https://www.linkedin.com/in/nir-elmaliah-a9b1a429b/" rel="me noopener">LinkedIn</a> · <a href="https://x.com/LmlyhNyr" rel="me noopener">X</a> · <a href="https://github.com/TheKingHippopotamus" rel="me noopener">GitHub</a> · <a href="https://pypi.org/user/KingHippopotamus/" rel="me noopener">PyPI</a> · <a href="https://www.npmjs.com/~king_pm" rel="me noopener">npm</a> · <a href="https://www.youtube.com/channel/UCJNDkUKgzA4KlFz4NuYvhnw" rel="me noopener">YouTube</a></p>
+</div></footer>
+</body>
+</html>

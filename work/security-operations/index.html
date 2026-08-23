@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="index, follow">
+<meta name="description" content="A ruling checks the live host before it decides. Both layers write to one audit trail. The publish gate can refuse.">
+<title>Security operations &amp; governance — King Hippopotamus</title>
+<link rel="canonical" href="https://thekinghippopotamus.github.io/work/security-operations/">
+<style>:root{color-scheme:dark light;--ink:#0B0E13;--raise:#12161E;--raise2:#1A1F2B;--sunk:#090C11;--rule:#262D3D;--rule2:#333C50;--t1:#F2EDE8;--t2:#9B9589;--t3:#6B665C;--gold:#C9A227;--gold2:#E0B830;--ok:#3D9B6E;--warn:#C4A235;--bad:#C4503A;--display:'Iowan Old Style','Palatino Linotype',Palatino,'Book Antiqua',Georgia,serif;--sans:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;--mono:ui-monospace,'SF Mono',Menlo,Consolas,'Liberation Mono',monospace}@media (prefers-color-scheme:light){:root{--ink:#ECEEEB;--raise:#F8F9F7;--raise2:#FFFFFF;--sunk:#E2E5E1;--rule:#CDD2CC;--rule2:#A7AFA6;--t1:#10151B;--t2:#4C555E;--t3:#6F7880;--gold:#8A6B10;--gold2:#6E5409;--ok:#2E7A55;--warn:#7A5F0E;--bad:#A83A24}}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--t1);font:16.5px/1.65 var(--sans);
+-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:0 26px}
+.wide{max-width:1040px}
+a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:3px}
+a:hover{text-decoration-color:currentColor}
+a:focus-visible{outline:2px solid var(--gold2);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:-.02em}
+p{margin:0 0 15px}
+code{font:.9em var(--mono)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:14px;top:14px;background:var(--raise);padding:9px 14px;z-index:9}
+.mast{border-bottom:1px solid var(--rule)}
+.mast .wrap{display:flex;flex-wrap:wrap;gap:10px 26px;align-items:baseline;
+justify-content:space-between;padding-top:18px;padding-bottom:16px}
+.mark{font:600 14px/1.4 var(--sans);letter-spacing:.02em;text-decoration:none}
+.mast nav ul{display:flex;flex-wrap:wrap;gap:9px 20px;list-style:none;margin:0;padding:0;
+font:11px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.mast nav a{text-decoration-color:transparent}
+.mast nav a:hover,.mast nav a[aria-current=page]{text-decoration-color:currentColor}
+main{padding-top:clamp(38px,7vw,80px)}
+h1{font-size:clamp(40px,6vw,72px);line-height:1.02;margin:0}
+h2{font-size:26px;margin:0 0 12px}h3{font-size:18px;margin:26px 0 8px}
+.thesis{font:clamp(19px,2.2vw,25px)/1.42 var(--display);letter-spacing:-.015em;
+margin:28px 0 0;max-width:46ch}
+.thesis2{margin:20px 0 0;color:var(--t2);font-size:16.5px;line-height:1.72;max-width:60ch}
+.roles{display:flex;flex-wrap:wrap;gap:12px 0;margin:32px 0 0;padding:0;list-style:none;
+font:11.5px/1 var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--t2)}
+.roles li{padding:0 16px;border-left:1px solid var(--rule2)}
+.roles li:first-child{padding-left:0;border-left:0}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin:34px 0 0}
+.btn{display:inline-block;font:12px/1 var(--mono);letter-spacing:.14em;
+text-transform:uppercase;padding:14px 22px;border:1px solid var(--rule2);
+text-decoration:none;transition:border-color .15s ease,background-color .15s ease}
+.btn:hover{border-color:var(--t2);background:var(--raise)}
+.btn-p{border-color:var(--t1)}
+.avail{margin:22px 0 0;font:12px/1.6 var(--mono);letter-spacing:.05em;color:var(--t3)}
+.sec{margin:clamp(52px,8vw,86px) 0 0}
+.sub{margin:clamp(34px,5vw,52px) 0 0}
+.eyebrow{display:flex;align-items:center;gap:12px;font:11px/1 var(--mono);
+letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 8px}
+.eyebrow::before{content:"";width:26px;height:1px;background:currentColor;flex:0 0 auto}
+.sec-note{margin:0 0 22px;color:var(--t2);font-size:15px;max-width:66ch}
+.grid{display:grid;gap:1px}
+.grid>*{box-shadow:0 0 0 1px var(--rule)}
+.pkgs{grid-template-columns:1fr}
+.cell{background:var(--raise);padding:20px 20px 18px}
+.cmd{display:block;font:13.5px/1.5 var(--mono);color:var(--t1);overflow-wrap:anywhere}
+.cmd::before{content:"$ ";color:var(--t3)}
+.pkg-meta{margin:15px 0 0;font:10.5px/1 var(--mono);letter-spacing:.13em;
+text-transform:uppercase;color:var(--t3);display:flex;flex-wrap:wrap;gap:9px;
+align-items:baseline}
+.ver{font-size:16px;letter-spacing:0;color:var(--gold);font-variant-numeric:tabular-nums}
+.pkg-cli{margin:11px 0 0;font:12px/1.5 var(--mono);color:var(--t2)}
+.pkg-more{margin:13px 0 0;font:10.5px/1 var(--mono);letter-spacing:.14em;
+text-transform:uppercase}
+.cards{grid-template-columns:repeat(2,1fr)}
+.card{background:var(--raise);padding:26px 24px 22px;text-decoration:none;display:block;
+transition:background-color .15s ease}
+.card:hover{background:var(--raise2)}
+.card:hover .card-t{text-decoration-color:currentColor}
+.card-dom{display:block;font:10.5px/1 var(--mono);letter-spacing:.18em;
+text-transform:uppercase;color:var(--t3);margin:0 0 15px}
+.card-t{display:block;font:clamp(22px,2.4vw,28px)/1.2 var(--display);letter-spacing:-.02em;
+text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:5px}
+.card-h{display:block;margin:12px 0 0;color:var(--t2);font-size:15px;line-height:1.6;
+max-width:52ch}
+.card-foot{display:flex;align-items:flex-end;gap:16px;margin:26px 0 0;padding:16px 0 0;
+border-top:1px solid var(--rule)}
+.big{font:400 clamp(30px,4vw,48px)/.88 var(--display);color:var(--gold);
+font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.big-lab{font:10.5px/1.35 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+color:var(--t3);max-width:22ch;padding-bottom:3px}
+.card-f{grid-column:1/-1}
+.card-f .card-h{max-width:64ch}
+.soon{color:var(--t2);display:flex;flex-direction:column;justify-content:center}
+.soon .card-dom{color:var(--t3)}
+.soon p{font-size:15px;line-height:1.6;margin:0;max-width:44ch}
+.caps{grid-template-columns:repeat(3,1fr)}
+.cap{background:var(--raise);padding:26px 24px 22px;display:flex;flex-direction:column}
+.cap-t{font:clamp(19px,2vw,23px)/1.25 var(--display);letter-spacing:-.02em;margin:0 0 13px}
+.cap-b{color:var(--t2);font-size:14.5px;line-height:1.65;margin:0;flex:1 1 auto}
+.how{grid-template-columns:repeat(3,1fr)}
+.how .cell{padding:24px 22px 22px}
+.how-l{font:10.5px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 15px}
+.how-t{font:17px/1.55 var(--display);margin:0;color:var(--t1)}
+.ledger{grid-template-columns:repeat(4,1fr);margin:26px 0 0}
+.ledger .cell{padding:18px 18px 16px}
+.led-v{font:22px/1.1 var(--mono);letter-spacing:-.02em;color:var(--t1);margin:0;
+font-variant-numeric:tabular-nums}
+.led-l{font:10px/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;
+color:var(--t3);margin:10px 0 0}
+@media (max-width:620px){.ledger{grid-template-columns:repeat(2,1fr)}}
+.plain{list-style:none;margin:0;padding:0}
+.plain li{padding:13px 0;border-bottom:1px solid var(--rule)}
+.plain li:last-child{border-bottom:0}
+.plain li>p:last-child{margin-bottom:0}
+.kicker{font:11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 20px}
+.lede{font:clamp(20px,2.7vw,29px)/1.35 var(--display);letter-spacing:-.02em;
+margin:24px 0 0;max-width:34ch}
+.lede-w{max-width:46ch}
+.prose p{max-width:68ch;line-height:1.75;margin:0 0 20px}
+.prose>:last-child{margin-bottom:0}
+.artifact{background:var(--raise);border:1px solid var(--rule);
+border-top:2px solid var(--gold);padding:22px 22px 20px;margin:22px 0}
+.artifact>.eyebrow{margin-bottom:18px}
+.artifact>:last-child{margin-bottom:0}
+.dec{list-style:none;counter-reset:d;margin:0;padding:0;display:grid;gap:1px}
+.dec li{box-shadow:0 0 0 1px var(--rule)}
+.dec li{counter-increment:d;background:var(--raise);padding:20px 22px 18px}
+.dec li::before{content:counter(d,decimal-leading-zero);display:block;
+font:11px/1 var(--mono);letter-spacing:.16em;color:var(--t3);margin:0 0 13px}
+.dec p{max-width:64ch;line-height:1.7}
+.dec p:last-child{margin-bottom:0}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font:10.5px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+color:var(--t3);padding:0 14px 10px 0;border-bottom:1px solid var(--rule2);white-space:nowrap}
+td{padding:13px 14px 13px 0;border-bottom:1px solid var(--rule);vertical-align:top;
+font:13px/1.6 var(--mono)}
+tr:last-child td{border-bottom:0}
+.spec td:first-child{color:var(--t3);width:36%}
+.pill{display:inline-block;font:10px/1.5 var(--mono);letter-spacing:.1em;
+text-transform:uppercase;padding:2px 9px;border:1px solid currentColor;border-radius:999px;
+white-space:nowrap}
+.p-ok{color:var(--ok)}.p-no{color:var(--bad)}.p-na{color:var(--warn)}
+.note{color:var(--t2);font-size:14.5px}
+.dia{color:var(--t2);margin:0;overflow-x:auto}
+.dia svg{max-width:100%;height:auto;display:block;margin:0 auto}
+figure{margin:24px 0}
+figcaption{font:11px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+color:var(--t3);margin:0 0 11px}
+pre{background:var(--sunk);border:1px solid var(--rule);border-left:2px solid var(--rule2);
+padding:17px 19px;margin:0;overflow-x:auto;font:12.5px/1.7 var(--mono);
+white-space:pre-wrap;overflow-wrap:break-word}
+.term{max-height:min(66vh,620px);overflow:auto;white-space:pre;color:var(--t2);
+line-height:1.75;border-left-color:var(--rule)}
+.term i{color:var(--t1);font-style:normal}
+.term-note{margin:0 0 16px;color:var(--t2);font-size:14.5px;max-width:66ch}
+.pending{border-left:2px solid var(--warn);padding:3px 0 3px 17px;color:var(--t2);
+font-size:14.5px;margin:0;max-width:68ch}
+.tldr ul,ul.tldr{list-style:none;padding:0;margin:0;display:grid;gap:8px}ul.tldr li{padding:10px 14px;border:1px solid var(--rule);border-radius:2px;font-family:var(--sans);font-size:15px;line-height:1.5}ul.tldr li::before{content:'— ';color:var(--gold)}
+.draft{border-left:2px solid var(--warn);padding:3px 0 3px 17px;color:var(--t2);
+font-size:14.5px;margin:26px 0 0;max-width:64ch}
+.held{margin:0 0 40px}
+.approval{margin:clamp(46px,7vw,72px) 0 0;padding:14px 0 0;border-top:1px solid var(--rule);
+font:10.5px/1.7 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--t3)}
+.plist{grid-template-columns:repeat(2,1fr)}
+.pc{background:var(--raise);padding:24px 24px 20px;text-decoration:none;display:flex;
+flex-direction:column;transition:background-color .15s ease}
+.pc:hover{background:var(--raise2)}
+.pc:hover .pc-n{text-decoration-color:currentColor}
+.pc-k{font:10.5px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;
+color:var(--t3);margin:0 0 14px}
+.pc-n{font:clamp(21px,2.2vw,26px)/1.15 var(--display);letter-spacing:-.02em;margin:0;
+text-decoration:underline;text-decoration-thickness:1px;
+text-decoration-color:var(--rule2);text-underline-offset:5px}
+.pc-o{margin:11px 0 0;color:var(--t2);font-size:14.5px;line-height:1.6;flex:1 1 auto}
+.pc-f{margin:20px 0 0;padding:15px 0 0;border-top:1px solid var(--rule);
+font:12.5px/1.5 var(--mono);color:var(--t1);overflow-wrap:anywhere}
+.pc-f::before{content:"$ ";color:var(--t3)}
+.pc-v{margin:9px 0 0;font:10.5px/1 var(--mono);letter-spacing:.13em;text-transform:uppercase;
+color:var(--t3)}
+.plist>:last-child:nth-child(odd){grid-column:span 2}
+.plist>:last-child:nth-child(odd) .pc-o,
+.plist>:last-child:nth-child(odd) .pc-n{max-width:56ch}
+.facts{grid-template-columns:repeat(5,1fr);margin:34px 0 0}
+.facts .cell{padding:17px 16px 15px}
+.fact-v{margin:0;font:19px/1.15 var(--mono);color:var(--t1);font-variant-numeric:tabular-nums;
+overflow-wrap:anywhere}
+.fact-l{margin:9px 0 0;font:10px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+color:var(--t3)}
+.phead{font:11px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:var(--t3);
+margin:0 0 18px}
+.install{margin:30px 0 0;background:var(--sunk);border:1px solid var(--rule2);
+padding:16px 18px;font:14px/1.5 var(--mono);color:var(--t1);overflow-wrap:anywhere}
+.install::before{content:"$ ";color:var(--t3)}
+.lay{margin:clamp(34px,5vw,50px) 0 0}
+.lay-h{border-bottom:1px solid var(--rule2);padding:0 0 13px;margin:0 0 20px}
+.lay-t{font:10.5px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3);margin:0 0 9px}
+.lay-n{font:21px/1.2 var(--display);letter-spacing:-.02em;margin:0}
+.lay-s{margin:9px 0 0;color:var(--t2);font-size:14.5px;max-width:66ch}
+.feat{grid-template-columns:repeat(2,1fr)}
+.ft{background:var(--raise);padding:22px 22px 20px;display:flex;flex-direction:column}
+.ft-b{align-self:flex-start;font:10px/1.5 var(--mono);letter-spacing:.14em;
+text-transform:uppercase;color:var(--t3);border:1px solid var(--rule2);border-radius:999px;
+padding:2px 10px;margin:0 0 15px}
+.ft-t{font:17px/1.35 var(--display);letter-spacing:-.01em;margin:0 0 10px}
+.ft-b2{margin:0 0 16px;color:var(--t2);font-size:14.5px;line-height:1.65;flex:1 1 auto}
+.ft pre{font-size:11.5px;line-height:1.7;padding:13px 15px;white-space:pre;overflow-x:auto}
+.feat>:last-child:nth-child(odd){grid-column:span 2}
+.feat>:last-child:nth-child(odd) .ft-t,
+.feat>:last-child:nth-child(odd) .ft-b2{max-width:58ch}
+.stations{list-style:none;counter-reset:s;margin:0;padding:0;display:grid;gap:1px}
+.stations>li{counter-increment:s;background:var(--raise);box-shadow:0 0 0 1px var(--rule);
+padding:22px 24px 20px;display:grid;grid-template-columns:52px 1fr;gap:0 18px}
+.st-n{font:11px/1.7 var(--mono);letter-spacing:.16em;color:var(--t3)}
+.st-n::before{content:counter(s,decimal-leading-zero)}
+.st-t{font:20px/1.25 var(--display);letter-spacing:-.02em;margin:0 0 10px}
+.st-x{margin:0;font-size:15px;line-height:1.7;color:var(--t1);max-width:62ch}
+.st-a{margin:15px 0 0;padding:12px 0 0;border-top:1px solid var(--rule);
+font:12px/1.7 var(--mono);color:var(--t2);max-width:72ch}
+.st-a b{font-weight:400;letter-spacing:.14em;text-transform:uppercase;font-size:10px;
+color:var(--t3)}
+.deck{grid-template-columns:repeat(2,1fr)}
+.dk{background:var(--raise);padding:22px 22px 20px}
+.dk-l{margin:0 0 13px;font:10.5px/1 var(--mono);letter-spacing:.2em;text-transform:uppercase;
+color:var(--t3)}
+.dk-t{margin:0;font-size:14.5px;line-height:1.7;color:var(--t1)}
+.lab{list-style:none;margin:0;padding:0;display:grid;gap:1px}
+.lab>li{background:var(--raise);box-shadow:0 0 0 1px var(--rule);padding:22px 24px 20px;
+display:grid;grid-template-columns:132px 1fr;gap:4px 22px}
+.lab-d{font:12px/1.7 var(--mono);color:var(--t2);font-variant-numeric:tabular-nums}
+.lab-t{font:20px/1.25 var(--display);letter-spacing:-.02em;margin:0}
+.lab-f{margin:15px 0 0;font:12.5px/1.75 var(--mono);color:var(--t2);max-width:76ch}
+.lab-f b{display:block;margin:0 0 4px;font-weight:400;font-size:10px;letter-spacing:.16em;
+text-transform:uppercase;color:var(--t3)}
+.lab-s{margin:10px 0 0}
+footer{margin-top:clamp(70px,10vw,116px);border-top:1px solid var(--rule);padding:26px 0 60px}
+.auth{margin:0;font-size:13.5px;line-height:1.7;color:var(--t2);max-width:72ch}
+.fmeta{margin:16px 0 0;font:10.5px/1.9 var(--mono);letter-spacing:.13em;
+text-transform:uppercase;color:var(--t3)}
+@media (min-width:600px){.pkgs{grid-template-columns:repeat(2,1fr)}
+.pkgs>:last-child{grid-column:span 2}}
+@media (min-width:900px){.pkgs{grid-template-columns:repeat(3,1fr)}
+.pkgs>:last-child{grid-column:auto}}
+@media (max-width:900px){.caps{grid-template-columns:1fr}.facts{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:820px){.cards,.how,.plist,.feat,.deck{grid-template-columns:1fr}
+.card-f{grid-column:auto}}
+@media (max-width:640px){.roles{flex-direction:column;align-items:flex-start;gap:9px}
+.roles li{border-left:0;padding:0}
+.stations>li,.lab>li{grid-template-columns:1fr;gap:10px}
+.st-n{letter-spacing:.2em}}
+@media (max-width:560px){main{padding-top:34px}.mast nav ul{gap:8px 14px}
+.thesis{max-width:none}.facts{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+:root[data-scheme=dark]{--ink:#0B0E13;--raise:#12161E;--raise2:#1A1F2B;--sunk:#090C11;--rule:#262D3D;--rule2:#333C50;--t1:#F2EDE8;--t2:#9B9589;--t3:#6B665C;--gold:#C9A227;--gold2:#E0B830;--ok:#3D9B6E;--warn:#C4A235;--bad:#C4503A}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="mast"><div class="wrap">
+<a class="mark" href="/">King Hippopotamus</a>
+<nav aria-label="Primary"><ul><li><a href="/">Home</a></li><li><a href="/work/" aria-current="page">Work</a></li><li><a href="/products/">Products</a></li><li><a href="/method/">Method</a></li><li><a href="/lab/">Lab</a></li><li><a href="/about/">About</a></li><li><a href="/hire/">Hire</a></li></ul></nav>
+</div></header>
+<main id="main"><div class="wrap">
+<p class="kicker">Case study</p>
+<h1>Security operations &amp; governance</h1>
+<p class="lede">A ruling checks the live host before it decides. Both layers write to one audit trail. The publish gate can refuse.</p>
+<section class="sec"><p class="eyebrow">Context</p><div class="prose"><p>One host carries the client work, the financial data, the automation and a public identity. There is no staging tier and no containment tier, so every severity call is made against a total blast radius, and the severity policy is written that way.</p>
+<p>The register is the spine. Each entry is numbered and carries a severity, a state and the date it was last checked against the live host. Entries close by re-checking, not by time passing, and where an entry has never been checked the register records that rather than carrying a date.</p>
+<p>Two rules govern how the register is used. <strong>A live check outranks memory</strong> — a register is a record of what was true when somebody last looked, so a resumed session re-runs the line before acting on it. And <strong>the officer function is separated from the execution function</strong>. One layer decides what tasks exist and what severity they carry; the other runs the runbooks. Both write through the same event dispatcher, so there is one trail rather than two — and the dispatcher records an event type it does not recognise as an unknown event rather than quietly accepting it as a known one.</p></div></section>
+<section class="sec"><p class="eyebrow">What I built</p><div class="prose"><p>A ruling has a fixed four-part shape, and the checking comes before the verdict. The most recent one opens with six live checks run against the box rather than against the register, states the verdict in one paragraph with the residual risk named by class, attaches twelve numbered requirements all marked mandatory, and closes with an eight-item post-arm checklist to be run attended — output pasted into the record before the surface counts as live. Arming without the checklist is a breach of the ruling, not a shortcut.</p>
+<p>Three mechanisms do the load-bearing work under it.</p>
+<p>Inbound is denied at <strong>two independent layers</strong>, because the container daemon writes its own firewall chain that is consulted before the host chain — a rule in one place only is a rule that can be walked around.</p>
+<p>A silent configuration override was neutralised by <strong>ordering rather than deletion</strong>. The daemon resolves directives first-value-wins, and a vendor-supplied drop-in was being read before the administrator&#x27;s own file, so the intended setting never applied and reading the main file would never have shown it. A second drop-in, named to sort ahead of it, is read first and wins. The replacement access path was demonstrated live first, timestamped, before anything was changed.</p>
+<p>Untrusted documents are converted only through a wrapper: safe mode, a throwaway per-call profile, a sandbox with private temp and process isolation. Where a separate network namespace was unavailable, a 92-line seccomp filter enforces the same denial one layer down, refusing internet-family sockets outright.</p>
+<p>Nothing here has been tested by an adversary.</p></div>
+<div class="artifact"><p class="eyebrow">The anatomy of a ruling — four parts, and the register entry it creates the same day</p>
+<div class="dia"><svg viewBox="0 0 960 372" width="100%" role="img" aria-label="The four-part shape of a ruling: pre-ruling live checks, verdict, twelve conditions, eight-item post-arm checklist, and a return arrow creating the register entry the same day"><g fill="none" stroke="currentColor" stroke-opacity=".38"><rect x="56" y="16" width="548" height="62" rx="3"/><rect x="56" y="98" width="548" height="62" rx="3"/><rect x="56" y="180" width="548" height="62" rx="3"/><rect x="56" y="262" width="548" height="62" rx="3"/></g><g fill="none" stroke="currentColor" stroke-opacity=".55"><path d="M330 78v20M330 160v20M330 242v20"/><path d="M325 93l5 5 5-5M325 175l5 5 5-5M325 257l5 5 5-5"/></g><g fill="none" stroke="var(--t2)"><circle cx="30" cy="47" r="13"/><circle cx="30" cy="129" r="13"/><circle cx="30" cy="211" r="13"/><circle cx="30" cy="293" r="13"/></g><g fill="currentColor" font-family="ui-monospace,monospace" font-size="12" text-anchor="middle"><text x="30" y="52">1</text><text x="30" y="134">2</text><text x="30" y="216">3</text><text x="30" y="298">4</text></g><g fill="currentColor" font-family="ui-monospace,monospace" font-size="13"><text x="76" y="44">Pre-ruling live checks</text><text x="76" y="126">Verdict</text><text x="76" y="208">Conditions attached</text><text x="76" y="290">Post-arm checklist</text></g><g fill="currentColor" fill-opacity=".62" font-family="ui-monospace,monospace" font-size="11"><text x="76" y="64">6 checks, run against the box · not against the register</text><text x="76" y="146">approve with conditions · residual risk named by class</text><text x="76" y="228">12 · all mandatory · arming without them is a breach</text><text x="76" y="310">8 checks · attended · output pasted into the record first</text></g><rect x="700" y="164" width="228" height="94" rx="3" fill="none" stroke="var(--gold)" stroke-opacity=".8"/><text x="720" y="196" fill="var(--gold)" font-family="ui-monospace,monospace" font-size="13">Risk register</text><g fill="currentColor" fill-opacity=".62" font-family="ui-monospace,monospace" font-size="11"><text x="720" y="218">new entry the same day</text><text x="720" y="236">state · severity · date last checked</text></g><path d="M604 293h108v-35" fill="none" stroke="var(--gold)" stroke-dasharray="4 4"/><path d="M707 268l5-10 5 10" fill="none" stroke="var(--gold)"/><path d="M700 190H660v-143H604" fill="none" stroke="currentColor" stroke-opacity=".35" stroke-dasharray="3 5"/><path d="M614 42l-10 5 10 5" fill="none" stroke="currentColor" stroke-opacity=".5"/><text x="668" y="112" fill="currentColor" fill-opacity=".45" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">read, then</text><text x="668" y="126" fill="currentColor" fill-opacity=".45" font-family="ui-monospace,monospace" font-size="10" text-anchor="middle">re-checked live</text><text x="30" y="356" fill="currentColor" fill-opacity=".55" font-family="ui-monospace,monospace" font-size="10">the shape is the control — nothing is armed on the strength of what the register remembers</text></svg></div>
+</div>
+</section>
+<section class="sec"><p class="eyebrow">Decisions</p><ul class="dec"><li><p>Chose to deny inbound at two independent layers over one clean rule in the host firewall, because the container daemon writes its own chain that is consulted before the host&#x27;s user chain — a single rule in the wrong layer is bypassed by the layer above it.</p></li><li><p>Chose to neutralise a silent configuration override by adding a drop-in that sorts ahead of the vendor file over deleting that file, because the daemon resolves directives first-value-wins and the earlier-sorting drop-in is therefore the one read first: deletion fixes today and re-breaks on the next provisioning event, while ordering makes the intended value win either way — and the ruling carries a standing watch item to re-read the resolved configuration, not the file, after any provider event.</p></li><li><p>Chose to make a missing secret scanner a hard failure with no opt-out flag over letting the gate skip a check it could not run, because a scan that did not run did not pass — the one optional check reports WARN inside a loud block and the documentation states WARN means the check produced no findings to show, never coverage.</p></li></ul></section>
+<section class="sec"><p class="eyebrow">Evidence</p><div class="artifact"><p class="eyebrow">Research artifact · evidence ledger</p>
+<div class="tw"><table><thead><tr><th>Claim</th><th>How it was checked</th><th>Status</th></tr></thead><tbody><tr><td>The standing register holds 21 numbered exposures, each carrying a severity and a state. 18 of the 21 also carry the date the claim was last checked against the live host; the three that do not are two standing structural entries and one the register itself marks as never verified. States resolve to 4 OPEN, 4 CONTROLLED, 3 ACCEPTED, 1 PARTIAL and 1 CLOSED, with the remainder carrying compound states.</td><td>grep -oE &#x27;SR-[0-9]+&#x27; &lt;register&gt; | sort -u | wc -l → 21 ; grep -E &#x27;^\| SR-[0-9]+&#x27; &lt;register&gt; | grep -cE &#x27;20[0-9]{2}-[0-9]{2}-[0-9]{2}&#x27; → 18 rows carry a last-checked date ; grep -oE &#x27;\| (OPEN|CLOSED|CONTROLLED|ACCEPTED|PARTIAL)&#x27; &lt;register&gt; | sort | uniq -c → the state mix</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The decision log is append-only, 510 lines, and holds 4 dated rulings — one ruling being one dated section — the earliest dated 2026-07-23 and the most recent 2026-08-23, inside a file whose earliest referenced date is 2026-03-30. Two of the four carry an explicit approve-with-conditions verdict; the other two are an investigation plan and an execution record.</td><td>grep -cE &#x27;^## 20&#x27; &lt;decisions&gt; → 4 ; wc -l &lt;decisions&gt; → 510 ; the earliest and latest dated section headers in the same file → 2026-07-23 and 2026-08-23 ; the earliest date token anywhere in the same file → 2026-03-30</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The most recent ruling carries the four-part shape drawn above: 6 pre-ruling live checks numbered V1–V6, 12 numbered conditions all marked mandatory, and 8 post-arm checks numbered P1–P8 to be run attended.</td><td>grep -cE &#x27;^\| V[0-9]&#x27; &lt;decisions&gt; → 6 ; grep -cE &#x27;^[0-9]+\. \*\*&#x27; over the ruling&#x27;s condition block → 12 ; grep -cE &#x27;^- \[ \] \*\*P[0-9]&#x27; &lt;decisions&gt; → 8 ; grep -nE &#x27;^### [0-9]\.&#x27; &lt;decisions&gt; → the four-part shape ; the block&#x27;s own heading states MUST for all twelve</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The incident log is separate and append-only, with 4 entries under a fixed vocabulary: 2 confirmed, 1 benign after investigation, and 1 documented negative result — a hunt where every candidate proved already patched, kept because the method lesson was worth keeping.</td><td>grep -cE &#x27;^- \*\*20&#x27; &lt;incidents&gt; → 4</td><td><span class="pill p-ok">published</span></td></tr><tr><td>One audit trail carries both layers: 353 machine-appended entries across 2,051 lines, on 143 distinct days inside a 146-day window. The dispatcher every actor writes through recognises 12 event types and records anything else as an unknown event rather than accepting it.</td><td>grep -cE &#x27;^  - timestamp:&#x27; &lt;audit&gt; → 353 ; wc -l &lt;audit&gt; → 2051 ; grep -oE &#x27;20[0-9]{2}-[0-9]{2}-[0-9]{2}&#x27; &lt;audit&gt; | sort -u | wc -l → 143 ; grep -cE &#x27;^  [A-Z_]+\)&#x27; &lt;dispatch&gt; → 12</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The host sensor is one file, 1,611 lines, standard library only, scoring 10 named layers on a weighted average. On an ordinary day it makes 288 three-layer passes, 96 ten-layer passes, 24 janitor runs, 24 outbound-only linter runs and 1 daily digest — four different units of work that are never summed into one number.</td><td>wc -l &lt;sensor&gt; → 1611 ; the layer table and weight table in the same file → 10 layers ; the schedule lines that drive it → 5 / 15 / 60-minute modes plus the daily digest</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The gate is the required last step before this site is published: 7 checks defined, of which 6 run in fixed order on every publish and a 7th runs when an evidence bundle is passed, exiting non-zero if any one of them fails, and the tree it guards carries the origin declaration the gate demands. Its rule file carries 43 rules in five categories — 11 topology, 5 identity, 16 content-legal, 6 disclosure, 5 tone — and 2 of those categories have their matched text redacted in the gate&#x27;s own output, so the log cannot leak what it caught. Self-excluded paths are printed on every run, including passes.</td><td>grep -c &#x27;^def check_&#x27; &lt;gate&gt; → 7 ; the check list the gate assembles before running → 6 unconditional, 1 appended only when an evidence bundle is given ; a rule-array count over &lt;denylist&gt; → 11 / 5 / 16 / 6 / 5 = 43 ; grep -n &#x27;REDACT_CATEGORIES&#x27; &lt;denylist&gt; → 2 categories ; the origin declaration the gate reads for same-origin resolution is present at the root of the tree this site is built from</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The document-render sandbox is a 405-line wrapper, a 92-line seccomp filter and a 180-line policy whose single rule is that calling the raw converter is an incident. The filter inspects the domain argument of the socket call and refuses the two internet families, so a crafted document cannot fetch even where a separate network namespace is unavailable. Running the filter&#x27;s self-test under the same BPF program returned both internet families denied with EACCES and the local family allowed.</td><td>wc -l over the wrapper, the filter and the policy → 405 / 92 / 180 ; grep -nE &#x27;AF_INET|__NR_socket|EACCES&#x27; over the filter source → the denial ; the filter&#x27;s self-test, which installs the same BPF program and then opens sockets under it, was run on 2026-08-23 → AFINET=DENIED, AFINET6=DENIED, AFUNIX=OK, exit 0.</td><td><span class="pill p-ok">published</span></td></tr><tr><td>The container control plane is built default-deny: the backend never mounts the container socket and speaks to a scoped proxy that allows 6 verb groups, denies 17, and itself publishes no port. Its security document publishes 7 residual risks against itself, and the states are published rather than netted: 3 still open, 1 recorded closed pending live verification, 2 accepted, 1 tracked as belonging to another surface. The panel is built and checked, not permanently deployed.</td><td>count of allowed and denied verb-group flags in the panel&#x27;s compose file → 6 and 17 ; grep -cE &#x27;^\| \*\*R[0-9]&#x27; &lt;panel-security&gt; → 7 ; the status column reads 4 OPEN, 2 ACCEPTED and 1 tracked separately, and the as-built section then records the first of those four closed pending live verification ; the panel&#x27;s own status line records built-and-checked, not deployed</td><td><span class="pill p-ok">published</span></td></tr></tbody></table></div><p class="note standing">12 claims tested · 9 published · 3 withdrawn before publication. Full evidence record available on request — <a href="mailto:hi@king-hippopotamus.com">hi@king-hippopotamus.com</a>.</p>
+</div><p class="note"><a href="/evidence/security-operations/">Published claims and the verification policy →</a></p></section>
+<section class="sec"><p class="eyebrow">Limitations</p><ul class="plain"><li><p>Nothing here is a penetration test, a third-party review or a certification. Every finding is self-assessed and the documents say so. The claim is a documented posture, not an absence of compromise — the incident log holds two confirmed incidents.</p></li><li><p>The sensor score is not a coverage figure and must not be read as one. The register entry that carries it records that the headline score overstates real coverage, so a green reading is not evidence of coverage. Re-baselining is deliberately manual, which is what makes an unexplained change meaningful and what makes a stale baseline possible.</p></li><li><p>The controls on the automation surface are procedural by design: they are written rules that agents consult, and this page claims no technical enforcement layer behind them.</p></li><li><p>This is not continuous monitoring with forensic readiness. Forensic coverage is carried on the register as an open item, not a closed one. Alerting is deliberately wrapped so a delivery failure cannot break collection, which also means a failed alert is silent.</p></li><li><p>The container control plane is built and checked, not permanently deployed. Of the seven residual risks its own security document publishes against itself, three are still open, and the one recorded as closed is closed pending a live re-check that has not been run.</p></li><li><p>The gate is the required last step before this site is published, not a guarantee about everything already public. Artifacts published before the gate existed never passed through it, and nothing the gate does can retract what was already distributed.</p></li></ul></section>
+<section class="sec"><p class="eyebrow">Links</p><div class="cta"><a class="btn" href="/evidence/security-operations/">Evidence</a></div><p class="note">No demo — there is nothing to open. This apparatus governs a private operating environment, and the artifacts it produces — the register, the rulings, the incident log — carry addresses, container names and topology on every line and cannot be shown. The commands that produced every figure are published instead, on the record page. Full evidence record available on request — hi@king-hippopotamus.com.</p></section>
+<section class="sec"><p class="eyebrow">Authorship</p><div class="prose"><p>I am the architect and author of record; drafts were produced by agent tooling under my protocol and every sentence was approved by me before publication. The permission matrix, the charter, the register, the rulings, the incident log, the sensor, the render sandbox and the publish gate are mine, written and operated over 4 complete months; agents execute runbook steps and log through the same dispatcher I do, and the officer function — what tasks exist, what severity they carry, what gets approved — is not delegated to them. Every figure on this page was re-run read-only on 2026-08-23; the redactions are the publish gate&#x27;s.</p></div></section><p class="approval">Author approval — 2026-08-23, hash 72986d16</p>
+</div></main>
+<footer><div class="wrap"><p class="auth">I am the architect and author of record; drafts were produced by agent tooling under my protocol and every sentence was approved by me before publication.</p>
+<p class="fmeta">@TheKingHippopotamus · <a href="mailto:hi@king-hippopotamus.com">hi@king-hippopotamus.com</a> · <a href="https://github.com/TheKingHippopotamus">GitHub</a></p>
+<p class="fmeta">Elsewhere: <a href="https://www.linkedin.com/in/nir-elmaliah-a9b1a429b/" rel="me noopener">LinkedIn</a> · <a href="https://x.com/LmlyhNyr" rel="me noopener">X</a> · <a href="https://github.com/TheKingHippopotamus" rel="me noopener">GitHub</a> · <a href="https://pypi.org/user/KingHippopotamus/" rel="me noopener">PyPI</a> · <a href="https://www.npmjs.com/~king_pm" rel="me noopener">npm</a> · <a href="https://www.youtube.com/channel/UCJNDkUKgzA4KlFz4NuYvhnw" rel="me noopener">YouTube</a></p>
+</div></footer>
+</body>
+</html>

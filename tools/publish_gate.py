@@ -385,6 +385,62 @@ def check_third_party(repo: Path, origins: list[str]) -> dict:
 
 
 # --------------------------------------------------------------------------- #
+# (f) internal links resolve
+# --------------------------------------------------------------------------- #
+HTML_EXTS = {".html", ".htm"}
+INTERNAL_HREF = re.compile(r'(?:href|src)="(/[^"]*)"')
+
+
+def link_target(href: str) -> str | None:
+    """The file an absolute internal reference must resolve to."""
+    path = href.split("#", 1)[0].split("?", 1)[0]
+    if not path.startswith("/"):
+        return None
+    if path in ("", "/"):
+        return "index.html"
+    if path.endswith("/"):
+        return path.lstrip("/") + "index.html"
+    if "." in path.rsplit("/", 1)[-1]:
+        return path.lstrip("/")
+    return path.lstrip("/") + "/index.html"
+
+
+def check_links(repo: Path) -> dict:
+    """A dead link is the amateur tell the site constitution names by that word.
+
+    Every absolute internal reference in the built output must resolve to a file
+    that was actually built.  Relative and external references are out of scope:
+    the third-party check owns external hosts, and a static site of this shape
+    emits absolute paths only.
+    """
+    pages = [f for f in iter_files(repo) if f.suffix.lower() in HTML_EXTS]
+    if not pages:
+        return result("links", "internal links resolve", SKIP, 0,
+                      ["no HTML in the scanned tree"])
+    hits, checked = [], 0
+    for f in pages:
+        try:
+            text = f.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        for lineno, line in enumerate(text.splitlines(), start=1):
+            for m in INTERNAL_HREF.finditer(line):
+                href = m.group(1)
+                target = link_target(href)
+                if target is None:
+                    continue
+                checked += 1
+                if not (repo / target).is_file():
+                    hits.append("%s:%d -> %s (no file at %s)"
+                                % (rel(repo, f), lineno, href, target))
+    uniq = sorted(set(hits))
+    notes = ["%d internal reference(s) checked across %d page(s)"
+             % (checked, len(pages))]
+    return result("links", "internal links resolve",
+                  FAIL if uniq else PASS, len(uniq), uniq[:60] + notes)
+
+
+# --------------------------------------------------------------------------- #
 # (e) filename / type denylist
 # --------------------------------------------------------------------------- #
 def check_filetypes(repo: Path) -> dict:
@@ -474,6 +530,7 @@ def run_gate(repo: Path, mode: str, evidence: str | None,
         check_denylist(repo),
         check_third_party(repo, origins),
         check_filetypes(repo),
+        check_links(repo),
     ]
     if no_evidence:
         checks.append(result("evidence", "evidence of verification", SKIP,
@@ -514,7 +571,7 @@ def print_summary(repo: Path, mode: str, checks: list[dict]) -> None:
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="publish_gate.py",
-                                 description="publish gate: six checks, exit 0 only if all pass")
+                                 description="publish gate: seven checks, exit 0 only if all pass")
     ap.add_argument("--mode", choices=["cleanroom", "prepush", "ci"], required=True)
     ap.add_argument("--repo", default=".", help="directory to gate")
     ap.add_argument("--evidence", default=None, help="explicit evidence.md path")
